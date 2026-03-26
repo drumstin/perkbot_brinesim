@@ -1,0 +1,47 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brine Shrimp Tank Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="hud card">
+      <h1>Brine Shrimp Tank</h1>
+      <p>Add eggs to start the colony. Feed lightly or nutrients will foul the water.</p>
+      <div class="stats" id="stats"></div>
+      <div class="buttons">
+        <button id="add-eggs">Add Eggs</button>
+        <button id="add-food">Add Food</button>
+      </div>
+      <div class="controls">
+        <label>
+          Salinity
+          <input id="salinity" type="range" min="0" max="100" value="55" />
+        </label>
+        <label>
+          Temperature
+          <input id="temperature" type="range" min="0" max="100" value="52" />
+        </label>
+      </div>
+      <div class="buttons">
+        <button id="restart">Restart</button>
+      </div>
+      <label class="registry">
+        Shrimp Registry
+        <textarea id="shrimp-registry" readonly spellcheck="false"></textarea>
+      </label>
+      <p class="goal">Tip: overfeeding and high population increase nutrient load.</p>
+    </section>
+
+    <section class="tank-wrap card">
+      <canvas id="tank" width="960" height="600"></canvas>
+      <div class="overlay" id="overlay"></div>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
