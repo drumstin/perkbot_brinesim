@@ -25,6 +25,7 @@ const elements = {
   feedHeavy: document.getElementById("feed-heavy"),
   pause: document.getElementById("pause"),
   speed: document.getElementById("speed"),
+  waterChange: document.getElementById("water-change"),
   restart: document.getElementById("restart")
 };
 

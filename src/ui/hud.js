@@ -3,6 +3,25 @@ import { restartGame } from "../state.js";
 import { saveGame } from "./save.js";
 import { addEvent } from "./log.js";
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function performWaterChange(game) {
+  if (game.tank.waterChangeCooldown > 0) {
+    addEvent(game, `Water change unavailable for ${Math.ceil(game.tank.waterChangeCooldown)}s.`);
+    return;
+  }
+
+  game.tank.waste = clamp(game.tank.waste - 22, 0, 100);
+  game.tank.oxygen = clamp(game.tank.oxygen + 10, 0, 100);
+  game.tank.foodLevel = clamp(game.tank.foodLevel - 4, 0, 100);
+  game.tank.clarity = clamp(game.tank.clarity + 0.12, 0.2, 1);
+  game.tank.waterChangeCooldown = 18;
+  addEvent(game, "Partial water change completed.");
+  saveGame(game);
+}
+
 export function bindUi(game, elements) {
   elements.salinity.addEventListener("input", () => {
     game.tank.salinity = Number(elements.salinity.value);
@@ -51,6 +70,10 @@ export function bindUi(game, elements) {
     elements.speed.textContent = `Speed x${game.timeScale}`;
   });
 
+  elements.waterChange.addEventListener("click", () => {
+    performWaterChange(game);
+  });
+
   elements.restart.addEventListener("click", () => {
     restartGame(game);
     elements.pause.textContent = "Pause";
@@ -80,6 +103,7 @@ export function updateHud(game, elements) {
     <div class="summary-item">Colony status: <strong>${game.collapsed ? "Collapsed" : game.colonyStarted ? "Active" : "Waiting"}</strong></div>
     <div class="summary-item">Tank stability: <strong>${Math.round(game.tank.stability * 100)}%</strong></div>
     <div class="summary-item">Time: <strong>${game.elapsed.toFixed(1)}s</strong></div>
+    <div class="summary-item">Water change: <strong>${game.tank.waterChangeCooldown > 0 ? `${Math.ceil(game.tank.waterChangeCooldown)}s cooldown` : "Ready"}</strong></div>
   `;
 
   const warnings = buildWarnings(game);

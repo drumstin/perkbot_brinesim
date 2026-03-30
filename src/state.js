@@ -36,7 +36,8 @@ export function createGame(elements) {
       waste: save?.tank?.waste ?? 10,
       foodLevel: save?.tank?.foodLevel ?? 12,
       clarity: save?.tank?.clarity ?? 0.9,
-      stability: 1
+      stability: 1,
+      waterChangeCooldown: save?.tank?.waterChangeCooldown ?? 0
     },
     milestones: {
       firstHatch: false,
@@ -77,15 +78,26 @@ export function restartGame(game) {
   game.elapsed = 0;
   game.colonyStarted = false;
   game.collapsed = false;
+  game.paused = false;
+  game.timeScale = 1;
   game.nextShrimpId = 1;
   game.eventSeq = 1;
   game.log = [];
   game.statsHistory = [];
+  game.historyTimer = 0;
+  game.milestones = {
+    firstHatch: false,
+    tenAdults: false,
+    fiftyTotal: false,
+    stableTank: false,
+    breeder: false
+  };
   game.tank.oxygen = 82;
   game.tank.waste = 10;
   game.tank.foodLevel = 12;
   game.tank.clarity = 0.9;
   game.tank.stability = 1;
+  game.tank.waterChangeCooldown = 0;
   addEvent(game, "Tank reset.");
   saveGame(game);
 }
