@@ -60,6 +60,10 @@ body {
   display: block;
 }
 
+.hud-sheet-backdrop {
+  display: none;
+}
+
 h1, h2 {
   margin-top: 0;
 }
@@ -404,7 +408,15 @@ canvas {
   }
 
   .hud {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    z-index: 20;
     padding: 10px;
+    border-radius: 18px 18px 14px 14px;
+    background: linear-gradient(180deg, rgba(20, 45, 68, 0.96), rgba(8, 24, 38, 0.98));
+    box-shadow: 0 -6px 30px rgba(0, 0, 0, 0.45);
   }
 
   .hud-toggle {
@@ -414,6 +426,17 @@ canvas {
 
   .hud.hud-collapsed {
     padding-bottom: 10px;
+  }
+
+  .hud.hud-collapsed .hud-toggle {
+    margin-bottom: 0;
+  }
+
+  .hud-content {
+    max-height: min(58dvh, 420px);
+    overflow: auto;
+    margin-top: 10px;
+    padding-right: 2px;
   }
 
   .summary,
@@ -437,10 +460,11 @@ canvas {
 
   .tank-wrap {
     padding: 8px;
+    margin-bottom: 72px;
   }
 
   .overlay {
-    padding: 16px;
+    padding: 16px 16px 28px;
   }
 
   .tank-menu-wrap {
@@ -467,6 +491,12 @@ canvas {
 
   .event-log {
     width: min(240px, calc(100vw - 24px));
+  }
+
+  .menu-toggle,
+  .log-toggle {
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   }
 
   .tank-action-menu {
