@@ -39,6 +39,13 @@ const elements = {
 
 const game = createGame(elements);
 bindUi(game, elements);
+
+[canvas, elements.quickMenuToggle, elements.tankActionMenu].filter(Boolean).forEach((node) => {
+  node.addEventListener("touchend", (event) => {
+    event.preventDefault();
+  }, { passive: false });
+});
+
 updateHud(game, elements);
 renderGame(game, elements);
 

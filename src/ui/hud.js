@@ -97,9 +97,11 @@ export function bindUi(game, elements) {
   elements.speed.addEventListener("click", handleSpeedToggle);
   elements.waterChange.addEventListener("click", handleWaterChange);
 
+  setQuickMenuOpen(elements, false);
+
   elements.quickMenuToggle?.addEventListener("click", () => {
-    const willOpen = elements.tankActionMenu?.hidden ?? true;
-    setQuickMenuOpen(elements, willOpen);
+    const isOpen = elements.tankActionMenu ? !elements.tankActionMenu.hidden : false;
+    setQuickMenuOpen(elements, !isOpen);
   });
 
   elements.quickAddEggs?.addEventListener("click", () => {

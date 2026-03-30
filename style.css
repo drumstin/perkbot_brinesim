@@ -207,6 +207,10 @@ canvas {
   border: 2px solid rgba(255, 255, 255, 0.2);
   background: #08263a;
   object-fit: contain;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .overlay {
@@ -243,6 +247,7 @@ canvas {
   font-size: 1.1rem;
   background: rgba(120, 215, 255, 0.92);
   color: #062536;
+  touch-action: manipulation;
 }
 
 .menu-toggle {
@@ -270,6 +275,7 @@ canvas {
   background: rgba(120, 215, 255, 0.92);
   color: #062536;
   text-align: left;
+  touch-action: manipulation;
 }
 
 .icon-button:disabled,
