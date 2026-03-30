@@ -119,53 +119,47 @@ export function bindUi(game, elements) {
   setQuickMenuOpen(elements, false);
   setEventLogOpen(elements, !window.matchMedia("(max-width: 640px)").matches);
 
-  elements.quickMenuToggle?.addEventListener("click", () => {
+  const bindPress = (node, handler) => {
+    if (!node) return;
+    node.addEventListener("pointerup", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      handler();
+    });
+  };
+
+  bindPress(elements.quickMenuToggle, () => {
     const isOpen = elements.tankActionMenu ? !elements.tankActionMenu.hidden : false;
     setQuickMenuOpen(elements, !isOpen);
   });
 
-  elements.eventLogToggle?.addEventListener("click", () => {
+  bindPress(elements.eventLogToggle, () => {
     const isOpen = elements.eventLog ? !elements.eventLog.hidden : false;
     setEventLogOpen(elements, !isOpen);
   });
 
-  elements.quickAddEggs?.addEventListener("click", () => {
+  bindPress(elements.quickAddEggs, () => {
     handleAddEggs();
     setQuickMenuOpen(elements, false);
   });
-  elements.quickFeedLight?.addEventListener("click", () => {
+  bindPress(elements.quickFeedLight, () => {
     handleFeedLight();
     setQuickMenuOpen(elements, false);
   });
-  elements.quickFeedHeavy?.addEventListener("click", () => {
+  bindPress(elements.quickFeedHeavy, () => {
     handleFeedHeavy();
     setQuickMenuOpen(elements, false);
   });
-  elements.quickPause?.addEventListener("click", () => {
+  bindPress(elements.quickPause, () => {
     handlePauseToggle();
     setQuickMenuOpen(elements, false);
   });
-  elements.quickSpeed?.addEventListener("click", () => {
+  bindPress(elements.quickSpeed, () => {
     handleSpeedToggle();
   });
-  elements.quickWaterChange?.addEventListener("click", () => {
+  bindPress(elements.quickWaterChange, () => {
     handleWaterChange();
     setQuickMenuOpen(elements, false);
-  });
-
-  document.addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof Node)) return;
-
-    if (elements.tankActionMenu && elements.quickMenuToggle) {
-      const clickedInsideMenu = elements.tankActionMenu.contains(target) || elements.quickMenuToggle.contains(target);
-      if (!clickedInsideMenu) setQuickMenuOpen(elements, false);
-    }
-
-    if (elements.eventLog && elements.eventLogToggle) {
-      const clickedInsideLog = elements.eventLog.contains(target) || elements.eventLogToggle.contains(target);
-      if (!clickedInsideLog && window.matchMedia("(max-width: 640px)").matches) setEventLogOpen(elements, false);
-    }
   });
 
   elements.restart.addEventListener("click", () => {
