@@ -25,12 +25,12 @@ body {
 
 .app {
   width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 20px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 12px;
   display: grid;
-  gap: 16px;
-  grid-template-columns: minmax(460px, 560px) minmax(0, 1fr);
+  gap: 12px;
+  grid-template-columns: minmax(320px, 440px) minmax(0, 1fr);
 }
 
 .card {
@@ -41,7 +41,7 @@ body {
 }
 
 .hud {
-  padding: 16px;
+  padding: 14px;
 }
 
 h1, h2 {
@@ -49,7 +49,7 @@ h1, h2 {
 }
 
 h1 {
-  font-size: 1.4rem;
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
 }
 
 h2 {
@@ -69,6 +69,14 @@ h2 {
 .warnings,
 .stats {
   margin: 12px 0;
+}
+
+.summary {
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+}
+
+.stats {
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
 }
 
 .summary-item,
@@ -135,19 +143,22 @@ input[type="range"] {
 
 .buttons {
   margin-top: 12px;
-  display: flex;
+  display: grid;
   gap: 8px;
-  flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
 }
 
 button {
+  width: 100%;
+  min-height: 44px;
   background: var(--accent);
   color: #032019;
   border: none;
-  padding: 9px 14px;
+  padding: 10px 14px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 700;
+  font-size: 0.95rem;
 }
 
 button:hover {
@@ -182,7 +193,7 @@ button:hover {
 
 .tank-wrap {
   position: relative;
-  padding: 12px;
+  padding: 10px;
   min-height: 0;
 }
 
@@ -201,7 +212,9 @@ canvas {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  padding: 24px;
+  text-align: center;
+  font-size: clamp(1rem, 3vw, 2rem);
   font-weight: 800;
   letter-spacing: 0.04em;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
@@ -210,9 +223,9 @@ canvas {
 
 .event-log {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  width: min(340px, calc(100% - 40px));
+  right: 16px;
+  bottom: 16px;
+  width: min(340px, calc(100% - 32px));
   max-height: 210px;
   overflow: auto;
   padding: 10px;
@@ -246,9 +259,76 @@ canvas {
     grid-template-columns: 1fr;
   }
 
+  .tank-wrap {
+    order: -1;
+  }
+
   .event-log {
     position: static;
     width: 100%;
     margin-top: 12px;
+    max-height: 180px;
+  }
+
+  .registry textarea {
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .card {
+    border-radius: 12px;
+  }
+
+  .hud {
+    padding: 12px;
+  }
+
+  .summary,
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .controls label,
+  .registry {
+    font-size: 0.92rem;
+  }
+
+  .registry textarea {
+    min-height: 140px;
+    font-size: 0.74rem;
+  }
+
+  .tank-wrap {
+    padding: 8px;
+  }
+
+  .overlay {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .summary,
+  .stats,
+  .buttons {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+  }
+
+  .event-log {
+    font-size: 0.8rem;
   }
 }
