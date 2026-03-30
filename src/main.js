@@ -33,6 +33,7 @@ const elements = {
   hudContent: document.getElementById("hud-content"),
   quickMenuToggle: document.getElementById("quick-menu-toggle"),
   tankActionMenu: document.getElementById("tank-action-menu"),
+  eventLogToggle: document.getElementById("event-log-toggle"),
   quickAddEggs: document.getElementById("quick-add-eggs"),
   quickFeedLight: document.getElementById("quick-feed-light"),
   quickFeedHeavy: document.getElementById("quick-feed-heavy"),

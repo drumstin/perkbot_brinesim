@@ -322,11 +322,23 @@ canvas {
   opacity: 0.55;
 }
 
-.event-log {
+.tank-log-wrap {
   position: absolute;
-  right: 16px;
   top: 16px;
-  width: min(320px, calc(100% - 32px));
+  right: 16px;
+  z-index: 5;
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.log-toggle {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+}
+
+.event-log {
+  position: static;
+  width: min(320px, calc(100vw - 32px));
   max-height: 180px;
   overflow: auto;
   padding: 10px;
@@ -365,10 +377,14 @@ canvas {
     order: -1;
   }
 
-  .event-log {
+  .tank-log-wrap {
     position: static;
-    width: 100%;
+    justify-items: stretch;
     margin-top: 12px;
+  }
+
+  .event-log {
+    width: 100%;
     max-height: 180px;
   }
 
@@ -435,13 +451,22 @@ canvas {
   .tank-status-bar {
     top: 12px;
     left: 64px;
-    right: 8px;
+    right: 56px;
     gap: 4px;
   }
 
   .status-chip {
     padding: 5px 8px;
     font-size: 0.72rem;
+  }
+
+  .tank-log-wrap {
+    top: 12px;
+    right: 12px;
+  }
+
+  .event-log {
+    width: min(240px, calc(100vw - 24px));
   }
 
   .tank-action-menu {

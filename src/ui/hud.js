@@ -32,6 +32,12 @@ function setHudOpen(elements, open) {
   elements.hudToggle.setAttribute("aria-expanded", open ? "true" : "false");
 }
 
+function setEventLogOpen(elements, open) {
+  if (!elements.eventLog || !elements.eventLogToggle) return;
+  elements.eventLog.hidden = !open;
+  elements.eventLogToggle.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
 function performWaterChange(game) {
   if (game.tank.waterChangeCooldown > 0) {
     addEvent(game, `Water change unavailable for ${Math.ceil(game.tank.waterChangeCooldown)}s.`);
@@ -111,10 +117,16 @@ export function bindUi(game, elements) {
   });
 
   setQuickMenuOpen(elements, false);
+  setEventLogOpen(elements, !window.matchMedia("(max-width: 640px)").matches);
 
   elements.quickMenuToggle?.addEventListener("click", () => {
     const isOpen = elements.tankActionMenu ? !elements.tankActionMenu.hidden : false;
     setQuickMenuOpen(elements, !isOpen);
+  });
+
+  elements.eventLogToggle?.addEventListener("click", () => {
+    const isOpen = elements.eventLog ? !elements.eventLog.hidden : false;
+    setEventLogOpen(elements, !isOpen);
   });
 
   elements.quickAddEggs?.addEventListener("click", () => {
@@ -139,6 +151,21 @@ export function bindUi(game, elements) {
   elements.quickWaterChange?.addEventListener("click", () => {
     handleWaterChange();
     setQuickMenuOpen(elements, false);
+  });
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Node)) return;
+
+    if (elements.tankActionMenu && elements.quickMenuToggle) {
+      const clickedInsideMenu = elements.tankActionMenu.contains(target) || elements.quickMenuToggle.contains(target);
+      if (!clickedInsideMenu) setQuickMenuOpen(elements, false);
+    }
+
+    if (elements.eventLog && elements.eventLogToggle) {
+      const clickedInsideLog = elements.eventLog.contains(target) || elements.eventLogToggle.contains(target);
+      if (!clickedInsideLog && window.matchMedia("(max-width: 640px)").matches) setEventLogOpen(elements, false);
+    }
   });
 
   elements.restart.addEventListener("click", () => {
