@@ -92,69 +92,97 @@ function drawShrimp(game, ctx) {
   for (const s of game.shrimp) {
     const size = currentSize(s);
     const heading = Math.atan2(s.vy, s.vx);
-    const wiggle = Math.sin((game.elapsed * 10) + s.x * 0.04 + s.y * 0.03);
+    const swimCycle = game.elapsed * 12 + s.x * 0.035 + s.y * 0.025;
+    const wiggle = Math.sin(swimCycle);
+    const pulse = Math.sin(swimCycle * 0.7);
     const energyFactor = Math.max(0.35, Math.min(1, s.energy / 100));
-    const bodyLight = 42 + energyFactor * 26;
+    const bodyLight = 42 + energyFactor * 24;
     ctx.save();
     ctx.translate(s.x, s.y);
-    ctx.rotate(heading + wiggle * 0.08);
+    ctx.rotate(heading + wiggle * 0.06);
 
     if (s.stage === "nauplius") {
-      ctx.fillStyle = `hsla(${s.hue + 8} 76% ${56 + energyFactor * 20}% / 0.9)`;
+      ctx.fillStyle = `hsla(${s.hue + 10} 82% ${58 + energyFactor * 18}% / 0.9)`;
       ctx.beginPath();
-      ctx.arc(0, 0, 0.8 + size * 0.45, 0, Math.PI * 2);
+      ctx.ellipse(0, 0, 0.9 + size * 0.55, 0.7 + size * 0.42, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.restore();
-      continue;
-    }
 
-    if (s.stage === "juvenile") {
-      ctx.fillStyle = `hsla(${s.hue + 4} 74% ${54 + energyFactor * 16}% / 0.88)`;
+      ctx.strokeStyle = "rgba(255, 230, 200, 0.7)";
+      ctx.lineWidth = 0.8;
       ctx.beginPath();
-      ctx.ellipse(0, 0, size * 1.4, size * 0.8, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255, 220, 185, 0.65)";
-      ctx.beginPath();
-      ctx.moveTo(size * 0.8, -0.5);
-      ctx.quadraticCurveTo(size * 1.6, -1.8, size * 2.8, -2.9);
-      ctx.moveTo(size * 0.8, 0.5);
-      ctx.quadraticCurveTo(size * 1.6, 1.8, size * 2.8, 2.9);
+      ctx.moveTo(size * 0.2, -0.2);
+      ctx.quadraticCurveTo(size * 1.2, -1.4, size * 2.0, -1.6 + wiggle * 0.5);
+      ctx.moveTo(size * 0.2, 0.2);
+      ctx.quadraticCurveTo(size * 1.2, 1.4, size * 2.0, 1.6 - wiggle * 0.5);
       ctx.stroke();
       ctx.restore();
       continue;
     }
 
-    ctx.strokeStyle = "rgba(255, 231, 195, 0.82)";
-    ctx.lineWidth = 1;
+    const bodyAlpha = s.stage === "elder" ? 0.72 : 0.88;
+    const tailWave = wiggle * size * 0.55;
+    const abdomenSegments = s.stage === "juvenile" ? 5 : 8;
+
+    ctx.strokeStyle = "rgba(255, 226, 190, 0.74)";
+    ctx.lineWidth = Math.max(0.8, size * 0.18);
     ctx.beginPath();
-    ctx.moveTo(size * 2.4, -1.2);
-    ctx.quadraticCurveTo(size * 3.5, -3.8 + wiggle * 1.6, size * 5, -6.4 + wiggle * 2.2);
-    ctx.moveTo(size * 2.4, 1.2);
-    ctx.quadraticCurveTo(size * 3.5, 3.8 - wiggle * 1.6, size * 5, 6.4 - wiggle * 2.2);
+    ctx.moveTo(size * 1.6, -0.4);
+    ctx.quadraticCurveTo(size * 2.5, -2.2 - pulse * 0.8, size * 3.8, -4.4 - pulse * 1.2);
+    ctx.moveTo(size * 1.6, 0.4);
+    ctx.quadraticCurveTo(size * 2.5, 2.2 + pulse * 0.8, size * 3.8, 4.4 + pulse * 1.2);
     ctx.stroke();
 
-    const segments = 8;
-    for (let i = 0; i < segments; i += 1) {
-      const t = i / (segments - 1);
-      const x = size * 1.4 - t * size * 4.8;
-      const segH = size * (0.98 - t * 0.56);
-      const segW = size * (1.22 - t * 0.62);
-      const bend = Math.sin((game.elapsed * 11) + i * 0.65 + s.x * 0.03) * (0.7 + t);
-      const faded = s.stage === "elder" ? -8 : 0;
-      ctx.fillStyle = `hsla(${s.hue + i * 0.9} 72% ${bodyLight + faded - i * 2.2}% / ${0.82 - t * 0.18})`;
+    ctx.fillStyle = `hsla(${s.hue + 6} 78% ${bodyLight + 6}% / 0.95)`;
+    ctx.beginPath();
+    ctx.ellipse(size * 1.7, 0, size * 1.5, size * 1.02, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = `hsla(${s.hue + 2} 68% ${bodyLight - 2}% / ${bodyAlpha})`;
+    for (let i = 0; i < abdomenSegments; i += 1) {
+      const t = i / (abdomenSegments - 1);
+      const x = size * 1.0 - t * size * 5.8;
+      const segW = size * (1.45 - t * 0.72);
+      const segH = size * (0.95 - t * 0.5);
+      const bend = Math.sin(swimCycle - i * 0.72) * (0.28 + t * 0.95) + tailWave * t;
       ctx.beginPath();
       ctx.ellipse(x, bend, segW, segH, 0, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.strokeStyle = `rgba(255, 244, 224, ${0.12 + (1 - t) * 0.18})`;
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(x - segW * 0.55, bend - segH * 0.85);
+      ctx.lineTo(x - segW * 0.45, bend + segH * 0.85);
+      ctx.stroke();
     }
 
-    ctx.fillStyle = `hsla(${s.hue + 4} 78% ${bodyLight + (s.stage === "elder" ? -4 : 4)}% / 0.96)`;
-    ctx.beginPath();
-    ctx.ellipse(size * 1.8, 0, size * 1.15, size * 0.95, 0, 0, Math.PI * 2);
-    ctx.fill();
+    const legCount = s.stage === "juvenile" ? 4 : 6;
+    ctx.strokeStyle = "rgba(255, 238, 210, 0.36)";
+    ctx.lineWidth = 0.9;
+    for (let i = 0; i < legCount; i += 1) {
+      const t = i / Math.max(1, legCount - 1);
+      const anchorX = size * 0.8 - t * size * 3.2;
+      const flap = Math.sin(swimCycle * 1.6 + i * 0.9) * size * 0.9;
+      ctx.beginPath();
+      ctx.moveTo(anchorX, -0.2);
+      ctx.quadraticCurveTo(anchorX - size * 0.35, -size * 1.1 - flap * 0.18, anchorX - size * 0.9, -size * 1.8 - flap * 0.35);
+      ctx.moveTo(anchorX, 0.2);
+      ctx.quadraticCurveTo(anchorX - size * 0.35, size * 1.1 + flap * 0.18, anchorX - size * 0.9, size * 1.8 + flap * 0.35);
+      ctx.stroke();
+    }
 
-    ctx.fillStyle = "rgba(17, 28, 36, 0.95)";
+    ctx.strokeStyle = "rgba(255, 226, 190, 0.68)";
+    ctx.lineWidth = 0.95;
     ctx.beginPath();
-    ctx.arc(size * 2.2, -0.9, Math.max(0.55, size * 0.22), 0, Math.PI * 2);
+    ctx.moveTo(-size * 4.5, tailWave * 0.85);
+    ctx.quadraticCurveTo(-size * 5.7, -size * 0.8 + tailWave, -size * 6.5, -size * 1.9 + tailWave * 1.1);
+    ctx.moveTo(-size * 4.5, tailWave * 0.85);
+    ctx.quadraticCurveTo(-size * 5.7, size * 0.8 + tailWave, -size * 6.5, size * 1.9 + tailWave * 1.1);
+    ctx.stroke();
+
+    ctx.fillStyle = "rgba(18, 30, 38, 0.95)";
+    ctx.beginPath();
+    ctx.arc(size * 2.25, -0.72, Math.max(0.5, size * 0.2), 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
