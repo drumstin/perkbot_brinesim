@@ -27,6 +27,8 @@ const elements = {
   speed: document.getElementById("speed"),
   waterChange: document.getElementById("water-change"),
   restart: document.getElementById("restart"),
+  quickMenuToggle: document.getElementById("quick-menu-toggle"),
+  tankActionMenu: document.getElementById("tank-action-menu"),
   quickAddEggs: document.getElementById("quick-add-eggs"),
   quickFeedLight: document.getElementById("quick-feed-light"),
   quickFeedHeavy: document.getElementById("quick-feed-heavy"),

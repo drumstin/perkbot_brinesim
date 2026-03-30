@@ -221,21 +221,11 @@ canvas {
   pointer-events: none;
 }
 
-.tank-toolbar {
+.tank-menu-wrap {
   position: absolute;
-  left: 50%;
-  bottom: 16px;
-  transform: translateX(-50%);
-  z-index: 3;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: min(92%, 520px);
-  padding: 8px;
-  border-radius: 16px;
-  background: rgba(4, 14, 22, 0.7);
-  backdrop-filter: blur(8px);
+  top: 16px;
+  left: 16px;
+  z-index: 4;
 }
 
 .icon-button {
@@ -252,7 +242,35 @@ canvas {
   color: #062536;
 }
 
-.icon-button:disabled {
+.menu-toggle {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+}
+
+.tank-action-menu {
+  margin-top: 8px;
+  min-width: 180px;
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(4, 14, 22, 0.88);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
+}
+
+.menu-action {
+  width: 100%;
+  min-height: 42px;
+  justify-content: flex-start;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(120, 215, 255, 0.92);
+  color: #062536;
+  text-align: left;
+}
+
+.icon-button:disabled,
+.menu-action:disabled {
   opacity: 0.55;
 }
 
@@ -306,11 +324,6 @@ canvas {
     max-height: 180px;
   }
 
-  .tank-toolbar {
-    bottom: 20px;
-    width: min(94%, 560px);
-  }
-
   .registry textarea {
     min-height: 180px;
   }
@@ -354,14 +367,16 @@ canvas {
   }
 
   .overlay {
-    padding: 16px 16px 74px;
+    padding: 16px;
   }
 
-  .tank-toolbar {
-    gap: 6px;
-    padding: 6px;
-    bottom: 12px;
-    width: calc(100% - 20px);
+  .tank-menu-wrap {
+    top: 12px;
+    left: 12px;
+  }
+
+  .tank-action-menu {
+    min-width: 164px;
   }
 
   .icon-button {

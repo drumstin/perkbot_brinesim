@@ -10,13 +10,19 @@ function clamp(value, min, max) {
 function setPauseState(game, elements, paused) {
   game.paused = paused;
   elements.pause.textContent = game.paused ? "Resume" : "Pause";
-  if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️" : "⏸️";
+  if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️ Resume" : "⏸️ Pause";
 }
 
 function cycleSpeed(game, elements) {
   game.timeScale = game.timeScale === 1 ? 2 : game.timeScale === 2 ? 4 : 1;
   elements.speed.textContent = `Speed x${game.timeScale}`;
-  if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩" : game.timeScale === 2 ? "⏩2" : "⏩4";
+  if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩ Speed x1" : game.timeScale === 2 ? "⏩ Speed x2" : "⏩ Speed x4";
+}
+
+function setQuickMenuOpen(elements, open) {
+  if (!elements.tankActionMenu || !elements.quickMenuToggle) return;
+  elements.tankActionMenu.hidden = !open;
+  elements.quickMenuToggle.setAttribute("aria-expanded", open ? "true" : "false");
 }
 
 function performWaterChange(game) {
@@ -90,12 +96,35 @@ export function bindUi(game, elements) {
   elements.pause.addEventListener("click", handlePauseToggle);
   elements.speed.addEventListener("click", handleSpeedToggle);
   elements.waterChange.addEventListener("click", handleWaterChange);
-  elements.quickAddEggs?.addEventListener("click", handleAddEggs);
-  elements.quickFeedLight?.addEventListener("click", handleFeedLight);
-  elements.quickFeedHeavy?.addEventListener("click", handleFeedHeavy);
-  elements.quickPause?.addEventListener("click", handlePauseToggle);
-  elements.quickSpeed?.addEventListener("click", handleSpeedToggle);
-  elements.quickWaterChange?.addEventListener("click", handleWaterChange);
+
+  elements.quickMenuToggle?.addEventListener("click", () => {
+    const willOpen = elements.tankActionMenu?.hidden ?? true;
+    setQuickMenuOpen(elements, willOpen);
+  });
+
+  elements.quickAddEggs?.addEventListener("click", () => {
+    handleAddEggs();
+    setQuickMenuOpen(elements, false);
+  });
+  elements.quickFeedLight?.addEventListener("click", () => {
+    handleFeedLight();
+    setQuickMenuOpen(elements, false);
+  });
+  elements.quickFeedHeavy?.addEventListener("click", () => {
+    handleFeedHeavy();
+    setQuickMenuOpen(elements, false);
+  });
+  elements.quickPause?.addEventListener("click", () => {
+    handlePauseToggle();
+    setQuickMenuOpen(elements, false);
+  });
+  elements.quickSpeed?.addEventListener("click", () => {
+    handleSpeedToggle();
+  });
+  elements.quickWaterChange?.addEventListener("click", () => {
+    handleWaterChange();
+    setQuickMenuOpen(elements, false);
+  });
 
   elements.restart.addEventListener("click", () => {
     restartGame(game);
@@ -152,10 +181,10 @@ export function updateHud(game, elements) {
     ["Breeder", game.milestones.breeder]
   ].map(([label, done]) => `<div class="milestone-item ${done ? "good" : "muted"}">${done ? "✓" : "○"} ${label}</div>`).join("");
 
-  if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️" : "⏸️";
-  if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩" : game.timeScale === 2 ? "⏩2" : "⏩4";
+  if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️ Resume" : "⏸️ Pause";
+  if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩ Speed x1" : game.timeScale === 2 ? "⏩ Speed x2" : "⏩ Speed x4";
   if (elements.quickWaterChange) {
-    elements.quickWaterChange.textContent = game.tank.waterChangeCooldown > 0 ? "💧⏳" : "💧";
+    elements.quickWaterChange.textContent = game.tank.waterChangeCooldown > 0 ? `💧 Cooldown ${Math.ceil(game.tank.waterChangeCooldown)}s` : "💧 Water Change";
     elements.quickWaterChange.disabled = game.tank.waterChangeCooldown > 0;
   }
 
