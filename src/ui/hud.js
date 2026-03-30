@@ -25,6 +25,13 @@ function setQuickMenuOpen(elements, open) {
   elements.quickMenuToggle.setAttribute("aria-expanded", open ? "true" : "false");
 }
 
+function setHudOpen(elements, open) {
+  if (!elements.hudPanel || !elements.hudToggle || !elements.hudContent) return;
+  elements.hudPanel.classList.toggle("hud-collapsed", !open);
+  elements.hudContent.hidden = !open;
+  elements.hudToggle.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
 function performWaterChange(game) {
   if (game.tank.waterChangeCooldown > 0) {
     addEvent(game, `Water change unavailable for ${Math.ceil(game.tank.waterChangeCooldown)}s.`);
@@ -97,6 +104,12 @@ export function bindUi(game, elements) {
   elements.speed.addEventListener("click", handleSpeedToggle);
   elements.waterChange.addEventListener("click", handleWaterChange);
 
+  setHudOpen(elements, !window.matchMedia("(max-width: 640px)").matches);
+  elements.hudToggle?.addEventListener("click", () => {
+    const open = elements.hudContent ? elements.hudContent.hidden : false;
+    setHudOpen(elements, open);
+  });
+
   setQuickMenuOpen(elements, false);
 
   elements.quickMenuToggle?.addEventListener("click", () => {
@@ -162,6 +175,16 @@ export function updateHud(game, elements) {
 
   const warnings = buildWarnings(game);
   elements.warnings.innerHTML = warnings.map((warning) => `<div class="warning-item ${warning.level}">${warning.text}</div>`).join("");
+
+  if (elements.tankStatusBar) {
+    elements.tankStatusBar.innerHTML = `
+      <div class="status-chip">🦐 ${game.shrimp.length}</div>
+      <div class="status-chip">🥚 ${game.eggs.length}</div>
+      <div class="status-chip">O₂ ${Math.round(game.tank.oxygen)}%</div>
+      <div class="status-chip">Waste ${Math.round(game.tank.waste)}%</div>
+      <div class="status-chip">Food ${Math.round(game.tank.foodLevel)}%</div>
+    `;
+  }
 
   elements.stats.innerHTML = `
     <div class="stat-row">Eggs: <strong>${game.eggs.length}</strong></div>

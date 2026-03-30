@@ -8,13 +8,15 @@
 </head>
 <body>
   <main class="app">
-    <section class="hud card">
-      <h1>Brine Shrimp Tank v2</h1>
-      <p>Grow a stable colony. Feed carefully, maintain oxygen, and keep waste under control.</p>
+    <section class="hud card" id="hud-panel">
+      <button id="hud-toggle" class="hud-toggle" type="button" aria-expanded="true">Stats & Controls</button>
+      <div id="hud-content" class="hud-content">
+        <h1>Brine Shrimp Tank v2</h1>
+        <p>Grow a stable colony. Feed carefully, maintain oxygen, and keep waste under control.</p>
 
-      <div class="summary" id="summary"></div>
-      <div class="warnings" id="warnings"></div>
-      <div class="stats" id="stats"></div>
+        <div class="summary" id="summary"></div>
+        <div class="warnings" id="warnings"></div>
+        <div class="stats" id="stats"></div>
 
       <div class="buttons feed-buttons">
         <button id="add-eggs">Add Eggs</button>
@@ -58,11 +60,13 @@
         Colony Registry
         <textarea id="shrimp-registry" readonly spellcheck="false"></textarea>
       </label>
+      </div>
     </section>
 
     <section class="tank-wrap card">
       <canvas id="tank" width="960" height="600"></canvas>
       <div class="overlay" id="overlay"></div>
+      <div class="tank-status-bar" id="tank-status-bar"></div>
       <div class="tank-menu-wrap">
         <button id="quick-menu-toggle" class="icon-button menu-toggle" title="Open tank actions" aria-label="Open tank actions" aria-expanded="false">☰</button>
         <div id="tank-action-menu" class="tank-action-menu" aria-label="Tank actions" hidden>
