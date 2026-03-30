@@ -21,6 +21,7 @@ body {
   background: radial-gradient(circle at top, #0e2b44 0%, var(--bg) 60%);
   color: var(--text);
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .app {
@@ -200,10 +201,12 @@ button:hover {
 canvas {
   width: 100%;
   height: auto;
+  max-height: calc(100dvh - 32px);
   display: block;
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   background: #08263a;
+  object-fit: contain;
 }
 
 .overlay {
@@ -400,5 +403,48 @@ canvas {
 
   .event-log {
     font-size: 0.8rem;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .app {
+    padding: 4px;
+    gap: 6px;
+    align-items: start;
+  }
+
+  .hud {
+    padding: 10px;
+  }
+
+  .tank-wrap {
+    padding: 4px;
+  }
+
+  canvas {
+    max-height: calc(100dvh - 12px);
+  }
+
+  .tank-menu-wrap {
+    top: 8px;
+    left: 8px;
+  }
+
+  .event-log {
+    top: 8px;
+    right: 8px;
+    max-height: 120px;
+    width: min(240px, calc(100% - 16px));
+    font-size: 0.75rem;
+  }
+
+  .tank-action-menu {
+    min-width: 150px;
+  }
+
+  .menu-action {
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
   }
 }
