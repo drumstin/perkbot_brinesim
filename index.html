@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,13 +9,19 @@
 <body>
   <main class="app">
     <section class="hud card">
-      <h1>Brine Shrimp Tank</h1>
-      <p>Add eggs to start the colony. Feed lightly or nutrients will foul the water.</p>
+      <h1>Brine Shrimp Tank v2</h1>
+      <p>Grow a stable colony. Feed carefully, maintain oxygen, and keep waste under control.</p>
+
+      <div class="summary" id="summary"></div>
+      <div class="warnings" id="warnings"></div>
       <div class="stats" id="stats"></div>
-      <div class="buttons">
+
+      <div class="buttons feed-buttons">
         <button id="add-eggs">Add Eggs</button>
-        <button id="add-food">Add Food</button>
+        <button id="feed-light">Light Feed</button>
+        <button id="feed-heavy">Heavy Feed</button>
       </div>
+
       <div class="controls">
         <label>
           Salinity
@@ -25,23 +31,41 @@
           Temperature
           <input id="temperature" type="range" min="0" max="100" value="52" />
         </label>
+        <label>
+          Aeration
+          <input id="aeration" type="range" min="0" max="100" value="58" />
+        </label>
       </div>
-      <div class="buttons">
+
+      <div class="buttons utility-buttons">
+        <button id="pause">Pause</button>
+        <button id="speed">Speed x1</button>
         <button id="restart">Restart</button>
       </div>
-      <label class="registry">
-        Shrimp Registry
+
+      <section class="milestones panel-block">
+        <h2>Milestones</h2>
+        <div id="milestones"></div>
+      </section>
+
+      <section class="panel-block">
+        <h2>Trends</h2>
+        <canvas id="history-graph" width="520" height="140"></canvas>
+      </section>
+
+      <label class="registry panel-block">
+        Colony Registry
         <textarea id="shrimp-registry" readonly spellcheck="false"></textarea>
       </label>
-      <p class="goal">Tip: overfeeding and high population increase nutrient load.</p>
     </section>
 
     <section class="tank-wrap card">
       <canvas id="tank" width="960" height="600"></canvas>
       <div class="overlay" id="overlay"></div>
+      <div class="event-log card" id="event-log"></div>
     </section>
   </main>
 
-  <script src="game.js"></script>
+  <script type="module" src="src/main.js"></script>
 </body>
 </html>

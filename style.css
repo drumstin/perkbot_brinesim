@@ -1,9 +1,14 @@
-﻿:root {
+:root {
   --bg: #04111f;
   --panel: #0b2133;
+  --panel-2: rgba(6, 18, 29, 0.78);
   --accent: #2ec4a6;
   --accent-2: #ffbf69;
+  --danger: #ff7a7a;
+  --warn: #ffd166;
+  --ok: #8fe26f;
   --text: #e8f1f8;
+  --muted: #b7cedd;
 }
 
 * {
@@ -39,16 +44,52 @@ body {
   padding: 16px;
 }
 
-h1 {
+h1, h2 {
   margin-top: 0;
+}
+
+h1 {
   font-size: 1.4rem;
 }
 
-.stats {
-  margin: 12px 0;
+h2 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.summary,
+.warnings,
+.stats,
+#milestones {
   display: grid;
   gap: 6px;
-  font-variant-numeric: tabular-nums;
+}
+
+.summary,
+.warnings,
+.stats {
+  margin: 12px 0;
+}
+
+.summary-item,
+.warning-item,
+.stat-row,
+.milestone-item {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--panel-2);
+}
+
+.warning-item.warn {
+  border-left: 4px solid var(--warn);
+}
+
+.warning-item.danger {
+  border-left: 4px solid var(--danger);
+}
+
+.warning-item.ok {
+  border-left: 4px solid var(--ok);
 }
 
 .controls {
@@ -56,22 +97,20 @@ h1 {
   gap: 8px;
 }
 
-.controls label {
+.controls label,
+.registry {
   display: grid;
   gap: 4px;
   font-size: 0.95rem;
 }
 
-.registry {
-  display: grid;
-  gap: 6px;
+.panel-block {
   margin-top: 14px;
-  font-size: 0.95rem;
 }
 
 .registry textarea {
   width: 100%;
-  min-height: 320px;
+  min-height: 260px;
   resize: vertical;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 10px;
@@ -79,6 +118,15 @@ h1 {
   background: rgba(3, 14, 23, 0.88);
   color: var(--text);
   font: 0.8rem/1.35 "Consolas", "Courier New", monospace;
+}
+
+#history-graph {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(3, 14, 23, 0.72);
 }
 
 input[type="range"] {
@@ -102,24 +150,40 @@ button {
   font-weight: 700;
 }
 
+button:hover {
+  filter: brightness(1.05);
+}
+
 #add-eggs {
   background: #e4a15c;
   color: #2b1704;
 }
 
-#add-food {
+#feed-light {
   background: #8fe26f;
   color: #14340a;
 }
 
-.goal {
-  margin-top: 14px;
-  color: #bde7dc;
+#feed-heavy {
+  background: #c9f284;
+  color: #2a3b08;
+}
+
+#restart {
+  background: #ff9a76;
+  color: #341107;
+}
+
+#pause,
+#speed {
+  background: #78d7ff;
+  color: #062536;
 }
 
 .tank-wrap {
   position: relative;
   padding: 12px;
+  min-height: 0;
 }
 
 canvas {
@@ -144,8 +208,47 @@ canvas {
   pointer-events: none;
 }
 
+.event-log {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: min(340px, calc(100% - 40px));
+  max-height: 210px;
+  overflow: auto;
+  padding: 10px;
+  background: rgba(4, 14, 22, 0.84);
+  font-size: 0.86rem;
+}
+
+.event-item {
+  padding: 6px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.event-item:last-child {
+  border-bottom: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.good {
+  color: var(--ok);
+}
+
+.bad {
+  color: var(--danger);
+}
+
 @media (max-width: 980px) {
   .app {
     grid-template-columns: 1fr;
+  }
+
+  .event-log {
+    position: static;
+    width: 100%;
+    margin-top: 12px;
   }
 }
