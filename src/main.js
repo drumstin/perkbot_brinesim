@@ -26,7 +26,13 @@ const elements = {
   pause: document.getElementById("pause"),
   speed: document.getElementById("speed"),
   waterChange: document.getElementById("water-change"),
-  restart: document.getElementById("restart")
+  restart: document.getElementById("restart"),
+  quickAddEggs: document.getElementById("quick-add-eggs"),
+  quickFeedLight: document.getElementById("quick-feed-light"),
+  quickFeedHeavy: document.getElementById("quick-feed-heavy"),
+  quickWaterChange: document.getElementById("quick-water-change"),
+  quickSpeed: document.getElementById("quick-speed"),
+  quickPause: document.getElementById("quick-pause")
 };
 
 const game = createGame(elements);

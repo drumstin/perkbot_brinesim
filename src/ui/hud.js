@@ -7,6 +7,18 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+function setPauseState(game, elements, paused) {
+  game.paused = paused;
+  elements.pause.textContent = game.paused ? "Resume" : "Pause";
+  if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️" : "⏸️";
+}
+
+function cycleSpeed(game, elements) {
+  game.timeScale = game.timeScale === 1 ? 2 : game.timeScale === 2 ? 4 : 1;
+  elements.speed.textContent = `Speed x${game.timeScale}`;
+  if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩" : game.timeScale === 2 ? "⏩2" : "⏩4";
+}
+
 function performWaterChange(game) {
   if (game.tank.waterChangeCooldown > 0) {
     addEvent(game, `Water change unavailable for ${Math.ceil(game.tank.waterChangeCooldown)}s.`);
@@ -39,40 +51,51 @@ export function bindUi(game, elements) {
     saveGame(game);
   });
 
-  elements.addEggs.addEventListener("click", () => {
+  const handleAddEggs = () => {
     addEggBatch(game, 16);
     addEvent(game, "Added a batch of eggs.");
     saveGame(game);
-  });
+  };
 
-  elements.feedLight.addEventListener("click", () => {
+  const handleFeedLight = () => {
     addFoodBurst(game, undefined, undefined, 5, 0.9);
     game.tank.foodLevel = Math.min(100, game.tank.foodLevel + 10);
     addEvent(game, "Light feeding added.");
     saveGame(game);
-  });
+  };
 
-  elements.feedHeavy.addEventListener("click", () => {
+  const handleFeedHeavy = () => {
     addFoodBurst(game, undefined, undefined, 10, 1.25);
     game.tank.foodLevel = Math.min(100, game.tank.foodLevel + 22);
     game.tank.waste = Math.min(100, game.tank.waste + 4);
     addEvent(game, "Heavy feeding added. Watch waste levels.");
     saveGame(game);
-  });
+  };
 
-  elements.pause.addEventListener("click", () => {
-    game.paused = !game.paused;
-    elements.pause.textContent = game.paused ? "Resume" : "Pause";
-  });
+  const handlePauseToggle = () => {
+    setPauseState(game, elements, !game.paused);
+  };
 
-  elements.speed.addEventListener("click", () => {
-    game.timeScale = game.timeScale === 1 ? 2 : game.timeScale === 2 ? 4 : 1;
-    elements.speed.textContent = `Speed x${game.timeScale}`;
-  });
+  const handleSpeedToggle = () => {
+    cycleSpeed(game, elements);
+  };
 
-  elements.waterChange.addEventListener("click", () => {
+  const handleWaterChange = () => {
     performWaterChange(game);
-  });
+  };
+
+  elements.addEggs.addEventListener("click", handleAddEggs);
+  elements.feedLight.addEventListener("click", handleFeedLight);
+  elements.feedHeavy.addEventListener("click", handleFeedHeavy);
+  elements.pause.addEventListener("click", handlePauseToggle);
+  elements.speed.addEventListener("click", handleSpeedToggle);
+  elements.waterChange.addEventListener("click", handleWaterChange);
+  elements.quickAddEggs?.addEventListener("click", handleAddEggs);
+  elements.quickFeedLight?.addEventListener("click", handleFeedLight);
+  elements.quickFeedHeavy?.addEventListener("click", handleFeedHeavy);
+  elements.quickPause?.addEventListener("click", handlePauseToggle);
+  elements.quickSpeed?.addEventListener("click", handleSpeedToggle);
+  elements.quickWaterChange?.addEventListener("click", handleWaterChange);
 
   elements.restart.addEventListener("click", () => {
     restartGame(game);
@@ -128,6 +151,13 @@ export function updateHud(game, elements) {
     ["Stable tank", game.milestones.stableTank],
     ["Breeder", game.milestones.breeder]
   ].map(([label, done]) => `<div class="milestone-item ${done ? "good" : "muted"}">${done ? "✓" : "○"} ${label}</div>`).join("");
+
+  if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️" : "⏸️";
+  if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩" : game.timeScale === 2 ? "⏩2" : "⏩4";
+  if (elements.quickWaterChange) {
+    elements.quickWaterChange.textContent = game.tank.waterChangeCooldown > 0 ? "💧⏳" : "💧";
+    elements.quickWaterChange.disabled = game.tank.waterChangeCooldown > 0;
+  }
 
   elements.registry.value = game.shrimp.length > 0
     ? game.shrimp.slice().sort((a, b) => a.id - b.id).map((s) => (
