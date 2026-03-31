@@ -196,16 +196,46 @@ function drawShrimp(game, ctx) {
       ctx.moveTo(anchorX, 0.2);
       ctx.quadraticCurveTo(anchorX - size * 0.35, size * 1.1 + flap * 0.18, anchorX - size * 0.9, size * 1.8 + flap * 0.35);
       ctx.stroke();
+
+      ctx.strokeStyle = "rgba(255, 242, 220, 0.18)";
+      ctx.lineWidth = 0.55;
+      for (let fil = 0; fil < 3; fil += 1) {
+        const offset = (fil - 1) * size * 0.18;
+        ctx.beginPath();
+        ctx.moveTo(anchorX - size * 0.35, offset);
+        ctx.quadraticCurveTo(anchorX - size * 0.7, offset - size * 0.45 - flap * 0.08, anchorX - size * 1.05, offset - size * 0.75 - flap * 0.16);
+        ctx.moveTo(anchorX - size * 0.35, -offset);
+        ctx.quadraticCurveTo(anchorX - size * 0.7, -offset + size * 0.45 + flap * 0.08, anchorX - size * 1.05, -offset + size * 0.75 + flap * 0.16);
+        ctx.stroke();
+      }
+      ctx.strokeStyle = "rgba(255, 238, 210, 0.36)";
+      ctx.lineWidth = 0.9;
     }
 
     ctx.strokeStyle = "rgba(255, 226, 190, 0.68)";
     ctx.lineWidth = 0.95;
     ctx.beginPath();
-    ctx.moveTo(-size * 4.5, tailWave * 0.85);
-    ctx.quadraticCurveTo(-size * 5.7, -size * 0.8 + tailWave, -size * 6.5, -size * 1.9 + tailWave * 1.1);
-    ctx.moveTo(-size * 4.5, tailWave * 0.85);
-    ctx.quadraticCurveTo(-size * 5.7, size * 0.8 + tailWave, -size * 6.5, size * 1.9 + tailWave * 1.1);
+    ctx.moveTo(-size * 4.4, tailWave * 0.75);
+    ctx.quadraticCurveTo(-size * 5.2, -size * 0.55 + tailWave * 0.8, -size * 5.9, -size * 1.3 + tailWave * 0.95);
+    ctx.quadraticCurveTo(-size * 6.4, -size * 1.9 + tailWave, -size * 6.9, -size * 2.4 + tailWave * 1.05);
+    ctx.moveTo(-size * 4.4, tailWave * 0.75);
+    ctx.quadraticCurveTo(-size * 5.2, size * 0.55 + tailWave * 0.8, -size * 5.9, size * 1.3 + tailWave * 0.95);
+    ctx.quadraticCurveTo(-size * 6.4, size * 1.9 + tailWave, -size * 6.9, size * 2.4 + tailWave * 1.05);
     ctx.stroke();
+
+    ctx.fillStyle = "rgba(255, 236, 208, 0.16)";
+    ctx.beginPath();
+    ctx.moveTo(-size * 4.4, tailWave * 0.72);
+    ctx.quadraticCurveTo(-size * 5.7, -size * 0.4 + tailWave * 0.9, -size * 6.3, -size * 1.55 + tailWave);
+    ctx.quadraticCurveTo(-size * 5.8, -size * 1.05 + tailWave * 0.8, -size * 4.9, tailWave * 0.58);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-size * 4.4, tailWave * 0.72);
+    ctx.quadraticCurveTo(-size * 5.7, size * 0.4 + tailWave * 0.9, -size * 6.3, size * 1.55 + tailWave);
+    ctx.quadraticCurveTo(-size * 5.8, size * 1.05 + tailWave * 0.8, -size * 4.9, tailWave * 0.58);
+    ctx.closePath();
+    ctx.fill();
 
     ctx.fillStyle = "rgba(18, 30, 38, 0.95)";
     ctx.beginPath();

@@ -42,7 +42,9 @@ export function makeShrimp(game, x = rand(40, W - 40), y = rand(60, H - 40)) {
     hue: rand(20, 36),
     fertility: rand(0.85, 1.2),
     brood: rand(0, 1),
-    broodCooldown: rand(8, 20)
+    broodCooldown: rand(8, 20),
+    hoverDepth: rand(H * 0.22, H * 0.72),
+    schoolingBias: rand(0.35, 1)
   };
 }
 

@@ -118,6 +118,16 @@ function updateShrimp(game, dt) {
     if (targetFood && nearestDist < 36000) {
       tx = targetFood.x;
       ty = targetFood.y;
+    } else {
+      const hoverTargetX = W * 0.52 + Math.sin((game.elapsed * 0.22) + shrimp.id * 0.7) * W * 0.14;
+      const hoverTargetY = shrimp.hoverDepth + Math.sin((game.elapsed * 0.55) + shrimp.id * 0.31) * 16;
+      tx = tx * (1 - shrimp.schoolingBias * 0.08) + hoverTargetX * (shrimp.schoolingBias * 0.08);
+      ty = ty * (1 - shrimp.schoolingBias * 0.16) + hoverTargetY * (shrimp.schoolingBias * 0.16);
+
+      if (shrimp.stage !== "nauplius") {
+        const airDrift = Math.max(0, 1 - Math.abs(shrimp.x - W * 0.76) / 220);
+        ty -= airDrift * 6 * (0.3 + shrimp.schoolingBias * 0.7);
+      }
     }
 
     const agility = shrimp.stage === "nauplius" ? 0.0032 : shrimp.stage === "juvenile" ? 0.0025 : 0.0018;
