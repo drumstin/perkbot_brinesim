@@ -102,9 +102,15 @@ function drawShrimp(game, ctx) {
     ctx.rotate(heading + wiggle * 0.06);
 
     if (s.stage === "nauplius") {
-      ctx.fillStyle = `hsla(${s.hue + 10} 82% ${58 + energyFactor * 18}% / 0.9)`;
+      const glow = 0.16 + energyFactor * 0.12;
+      ctx.fillStyle = `hsla(${s.hue + 16} 88% ${60 + energyFactor * 18}% / 0.82)`;
       ctx.beginPath();
-      ctx.ellipse(0, 0, 0.9 + size * 0.55, 0.7 + size * 0.42, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 0, 0.95 + size * 0.58, 0.72 + size * 0.44, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = `rgba(255, 248, 236, ${glow})`;
+      ctx.beginPath();
+      ctx.ellipse(size * 0.15, -0.12, size * 0.5, size * 0.28, 0, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.strokeStyle = "rgba(255, 230, 200, 0.7)";
@@ -115,11 +121,17 @@ function drawShrimp(game, ctx) {
       ctx.moveTo(size * 0.2, 0.2);
       ctx.quadraticCurveTo(size * 1.2, 1.4, size * 2.0, 1.6 - wiggle * 0.5);
       ctx.stroke();
+
+      ctx.fillStyle = "rgba(18, 30, 38, 0.85)";
+      ctx.beginPath();
+      ctx.arc(size * 0.52, -0.2, Math.max(0.28, size * 0.12), 0, Math.PI * 2);
+      ctx.fill();
       ctx.restore();
       continue;
     }
 
-    const bodyAlpha = s.stage === "elder" ? 0.72 : 0.88;
+    const bodyAlpha = s.stage === "elder" ? 0.68 : 0.82;
+    const shellAlpha = s.stage === "elder" ? 0.2 : 0.3;
     const tailWave = wiggle * size * 0.55;
     const abdomenSegments = s.stage === "juvenile" ? 5 : 8;
 
@@ -132,10 +144,25 @@ function drawShrimp(game, ctx) {
     ctx.quadraticCurveTo(size * 2.5, 2.2 + pulse * 0.8, size * 3.8, 4.4 + pulse * 1.2);
     ctx.stroke();
 
-    ctx.fillStyle = `hsla(${s.hue + 6} 78% ${bodyLight + 6}% / 0.95)`;
+    ctx.fillStyle = `hsla(${s.hue + 6} 78% ${bodyLight + 6}% / 0.88)`;
     ctx.beginPath();
     ctx.ellipse(size * 1.7, 0, size * 1.5, size * 1.02, 0, 0, Math.PI * 2);
     ctx.fill();
+
+    ctx.fillStyle = `rgba(255, 247, 236, ${shellAlpha})`;
+    ctx.beginPath();
+    ctx.ellipse(size * 1.2, -0.1, size * 2.1, size * 1.04, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (s.stage === "adult" && s.brood > 0.55) {
+      ctx.fillStyle = `rgba(210, 124, 82, ${0.18 + Math.min(0.22, s.brood * 0.18)})`;
+      ctx.beginPath();
+      ctx.ellipse(size * 0.5, size * 0.72, size * 1.1, size * 0.52, 0.18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(size * 0.35, -size * 0.72, size * 1.1, size * 0.52, -0.18, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     ctx.fillStyle = `hsla(${s.hue + 2} 68% ${bodyLight - 2}% / ${bodyAlpha})`;
     for (let i = 0; i < abdomenSegments; i += 1) {
