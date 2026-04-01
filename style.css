@@ -274,6 +274,12 @@ canvas {
   backdrop-filter: blur(10px);
 }
 
+.observe-toggle.active {
+  background: rgba(110, 200, 255, 0.9);
+  color: #062536;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
 .status-chip {
   padding: 6px 10px;
   border-radius: 999px;

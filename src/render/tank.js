@@ -273,12 +273,37 @@ function drawCorpses(game, ctx) {
   }
 }
 
+function drawObservationOverlay(ctx) {
+  const vignette = ctx.createRadialGradient(W * 0.5, H * 0.5, H * 0.14, W * 0.5, H * 0.5, H * 0.7);
+  vignette.addColorStop(0, "rgba(0, 0, 0, 0)");
+  vignette.addColorStop(1, "rgba(0, 0, 0, 0.34)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = "rgba(220, 245, 255, 0.35)";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(W * 0.18, H * 0.16, W * 0.64, H * 0.68);
+
+  ctx.strokeStyle = "rgba(220, 245, 255, 0.18)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(W * 0.5, H * 0.22);
+  ctx.lineTo(W * 0.5, H * 0.78);
+  ctx.moveTo(W * 0.24, H * 0.5);
+  ctx.lineTo(W * 0.76, H * 0.5);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(220, 245, 255, 0.75)";
+  ctx.font = "12px sans-serif";
+  ctx.fillText("Observation mode", 20, 24);
+}
+
 export function renderGame(game, elements) {
   const { ctx, canvas } = elements;
   ctx.save();
   if (game.observeMode) {
-    ctx.translate(canvas.width * 0.08, canvas.height * 0.06);
-    ctx.scale(1.22, 1.22);
+    ctx.translate(canvas.width * 0.12, canvas.height * 0.09);
+    ctx.scale(1.32, 1.32);
   }
   drawTankBackground(game, ctx);
   drawBubbles(game, ctx);
@@ -287,4 +312,8 @@ export function renderGame(game, elements) {
   drawCorpses(game, ctx);
   drawShrimp(game, ctx);
   ctx.restore();
+
+  if (game.observeMode) {
+    drawObservationOverlay(ctx);
+  }
 }

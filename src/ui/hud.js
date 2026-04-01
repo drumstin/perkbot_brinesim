@@ -203,8 +203,9 @@ export function updateHud(game, elements) {
   elements.warnings.innerHTML = warnings.map((warning) => `<div class="warning-item ${warning.level}">${warning.text}</div>`).join("");
 
   if (elements.observeToggle) {
-    elements.observeToggle.textContent = game.observeMode ? "🔍 Observing" : "🔍 Observe";
+    elements.observeToggle.textContent = game.observeMode ? "🔬 Observing" : "🔍 Observe";
     elements.observeToggle.setAttribute("aria-pressed", game.observeMode ? "true" : "false");
+    elements.observeToggle.classList.toggle("active", game.observeMode);
   }
 
   if (elements.tankStatusBar) {
