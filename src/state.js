@@ -32,6 +32,11 @@ export function createGame(elements) {
     points: save?.points ?? 30,
     pointTimer: 0,
     lastPointAwardTime: save?.lastPointAwardTime ?? 0,
+    upgrades: {
+      filter: save?.upgrades?.filter ?? 0,
+      skimmer: save?.upgrades?.skimmer ?? 0,
+      bioMedia: save?.upgrades?.bioMedia ?? 0
+    },
     tank: {
       salinity: save?.tank?.salinity ?? 55,
       temperature: save?.tank?.temperature ?? 52,
@@ -92,6 +97,11 @@ export function restartGame(game) {
   game.points = 30;
   game.pointTimer = 0;
   game.lastPointAwardTime = 0;
+  game.upgrades = {
+    filter: 0,
+    skimmer: 0,
+    bioMedia: 0
+  };
   game.historyTimer = 0;
   game.milestones = {
     firstHatch: false,

@@ -17,6 +17,7 @@ const elements = {
   warnings: document.getElementById("warnings"),
   registry: document.getElementById("shrimp-registry"),
   milestones: document.getElementById("milestones"),
+  shop: document.getElementById("shop"),
   historyGraph: document.getElementById("history-graph"),
   eventLog: document.getElementById("event-log"),
   salinity: document.getElementById("salinity"),

@@ -10,6 +10,12 @@ export const COSTS = {
   waterChange: 6
 };
 
+const UPGRADE_COSTS = {
+  filter: [18, 34, 55],
+  skimmer: [16, 30, 48],
+  bioMedia: [20, 36, 58]
+};
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -21,6 +27,22 @@ function spendPoints(game, amount, reason) {
   }
   game.points -= amount;
   return true;
+}
+
+function buyUpgrade(game, key, label) {
+  const level = game.upgrades[key] ?? 0;
+  const nextCost = UPGRADE_COSTS[key]?.[level];
+  if (nextCost == null) {
+    addEvent(game, `${label} already maxed out.`);
+    return;
+  }
+  if (!spendPoints(game, nextCost, `${label} upgrade`)) {
+    saveGame(game);
+    return;
+  }
+  game.upgrades[key] = level + 1;
+  addEvent(game, `${label} upgraded to level ${game.upgrades[key]}.`);
+  saveGame(game);
 }
 
 function setPauseState(game, elements, paused) {
@@ -145,6 +167,21 @@ export function bindUi(game, elements) {
     game.observeMode = !game.observeMode;
     elements.observeToggle.setAttribute("aria-pressed", game.observeMode ? "true" : "false");
     saveGame(game);
+  });
+
+  elements.shop?.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    const button = target.closest("button[data-upgrade]");
+    if (!button) return;
+    const key = button.dataset.upgrade;
+    if (!key) return;
+    const labels = {
+      filter: "Mechanical filter",
+      skimmer: "Surface skimmer",
+      bioMedia: "Bio media"
+    };
+    buyUpgrade(game, key, labels[key] ?? key);
   });
 
   setHudOpen(elements, !window.matchMedia("(max-width: 640px)").matches);
@@ -278,6 +315,23 @@ export function updateHud(game, elements) {
     ["Stable tank", game.milestones.stableTank],
     ["Breeder", game.milestones.breeder]
   ].map(([label, done]) => `<div class="milestone-item ${done ? "good" : "muted"}">${done ? "✓" : "○"} ${label}</div>`).join("");
+
+  if (elements.shop) {
+    const shopItems = [
+      ["filter", "Mechanical Filter", "Reduces suspended waste build-up."],
+      ["skimmer", "Surface Skimmer", "Adds oxygen and clears top-layer gunk."],
+      ["bioMedia", "Bio Media", "Improves beneficial filtration stability."]
+    ];
+    elements.shop.innerHTML = shopItems.map(([key, label, desc]) => {
+      const level = game.upgrades[key] ?? 0;
+      const nextCost = UPGRADE_COSTS[key]?.[level];
+      const maxed = nextCost == null;
+      return `<div class="shop-item">
+        <div><strong>${label}</strong><div class="muted">${desc}</div><div class="muted">Level ${level}/3</div></div>
+        <button data-upgrade="${key}" ${maxed ? "disabled" : ""}>${maxed ? "Maxed" : `Buy (${nextCost})`}</button>
+      </div>`;
+    }).join("");
+  }
 
   if (elements.quickAddEggs) elements.quickAddEggs.textContent = `🥚 Add Eggs (${COSTS.eggs})`;
   if (elements.quickFeedLight) elements.quickFeedLight.textContent = `🌿 Light Feed (${COSTS.lightFeed})`;

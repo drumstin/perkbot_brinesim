@@ -8,6 +8,7 @@ export function saveGame(game) {
     observeMode: game.observeMode,
     points: game.points,
     lastPointAwardTime: game.lastPointAwardTime,
+    upgrades: game.upgrades,
     tank: game.tank,
     milestones: game.milestones,
     shrimp: game.shrimp,

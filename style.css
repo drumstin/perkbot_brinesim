@@ -136,6 +136,21 @@ h2 {
   margin-top: 14px;
 }
 
+.shop-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.shop-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--panel-2);
+}
+
 .registry textarea {
   width: 100%;
   min-height: 260px;

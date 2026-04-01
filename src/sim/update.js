@@ -25,16 +25,19 @@ function updateTank(game, dt) {
   const populationPressure = game.shrimp.length * 0.14 + game.eggs.length * 0.015;
   const aerationPower = game.tank.aeration / 100;
   const heatStress = Math.max(0, game.tank.temperature - 60) * 0.04;
+  const filterBonus = (game.upgrades.filter ?? 0) * 0.5;
+  const skimmerBonus = (game.upgrades.skimmer ?? 0) * 0.45;
+  const bioBonus = (game.upgrades.bioMedia ?? 0) * 0.4;
 
   game.tank.foodLevel = clamp(game.tank.foodLevel - dt * (0.55 + game.shrimp.length * 0.022), 0, 100);
   game.tank.waste = clamp(
     game.tank.waste + dt * (populationPressure * 0.085 + game.food.length * 0.02 + game.corpses.length * 0.24)
-      - dt * (0.65 + aerationPower * 1.65),
+      - dt * (0.65 + aerationPower * 1.65 + filterBonus + bioBonus),
     0,
     100
   );
   game.tank.oxygen = clamp(
-    game.tank.oxygen + dt * (1.1 + aerationPower * 4.4)
+    game.tank.oxygen + dt * (1.1 + aerationPower * 4.4 + skimmerBonus)
       - dt * (populationPressure * 0.13 + game.tank.waste * 0.022 + heatStress),
     0,
     100
