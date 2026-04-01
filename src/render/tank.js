@@ -66,15 +66,27 @@ function drawFood(game, ctx) {
 
 function drawEggs(game, ctx) {
   for (const e of game.eggs) {
-    ctx.fillStyle = "rgba(123, 79, 40, 0.95)";
+    const hatchGlow = e.flash ? e.flash * (0.18 + 0.12 * Math.sin(e.wobble * 2)) : 0;
+    const wobbleX = Math.sin(e.wobble) * 0.35;
+    const wobbleY = Math.cos(e.wobble * 1.2) * 0.25;
+
+    ctx.fillStyle = `hsla(${e.hue} 48% 34% / 0.96)`;
     ctx.beginPath();
-    ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+    ctx.ellipse(e.x + wobbleX, e.y + wobbleY, e.r * 1.02, e.r * 0.92, e.wobble * 0.12, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = "rgba(196, 147, 90, 0.45)";
+    ctx.fillStyle = `rgba(255, 214, 156, ${0.28 + hatchGlow})`;
     ctx.beginPath();
-    ctx.arc(e.x - e.r * 0.25, e.y - e.r * 0.35, e.r * 0.4, 0, Math.PI * 2);
+    ctx.arc(e.x - e.r * 0.25 + wobbleX, e.y - e.r * 0.35 + wobbleY, e.r * 0.42, 0, Math.PI * 2);
     ctx.fill();
+
+    if (hatchGlow > 0.02) {
+      ctx.strokeStyle = `rgba(255, 236, 180, ${hatchGlow})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.r * (1.6 + hatchGlow * 1.8), 0, Math.PI * 2);
+      ctx.stroke();
+    }
   }
 }
 
@@ -262,11 +274,17 @@ function drawCorpses(game, ctx) {
 }
 
 export function renderGame(game, elements) {
-  const { ctx } = elements;
+  const { ctx, canvas } = elements;
+  ctx.save();
+  if (game.observeMode) {
+    ctx.translate(canvas.width * 0.08, canvas.height * 0.06);
+    ctx.scale(1.22, 1.22);
+  }
   drawTankBackground(game, ctx);
   drawBubbles(game, ctx);
   drawFood(game, ctx);
   drawEggs(game, ctx);
   drawCorpses(game, ctx);
   drawShrimp(game, ctx);
+  ctx.restore();
 }

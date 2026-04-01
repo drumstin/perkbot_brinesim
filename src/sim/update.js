@@ -3,6 +3,10 @@ import { addEvent } from "../ui/log.js";
 import { saveGame } from "../ui/save.js";
 import { addEggBatch, currentSize, makeBubble, makeCorpse, makeShrimp, rand, stageForAge } from "./spawning.js";
 
+function clamp01(value) {
+  return clamp(value, 0, 1);
+}
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -45,11 +49,14 @@ function updateEggs(game, dt) {
 
     const hatchRate = 0.45 + game.tank.stability * 0.7 + game.tank.oxygen / 240;
     egg.hatchTimer -= dt * hatchRate;
+    egg.wobble += dt * 3.4;
+    egg.flash = clamp01((7 - egg.hatchTimer) / 7);
 
     if (egg.hatchTimer <= 0) {
       const hatchChance = game.tank.stability * 0.7 + game.tank.oxygen / 200 - game.tank.waste / 180;
       if (Math.random() < hatchChance) {
         game.shrimp.push(makeShrimp(game, egg.x + rand(-3, 3), egg.y + rand(-3, 3)));
+        addEvent(game, `Egg hatched near (${Math.round(egg.x)}, ${Math.round(egg.y)}).`);
         if (!game.milestones.firstHatch) {
           game.milestones.firstHatch = true;
           addEvent(game, "First nauplii hatched.");
@@ -123,6 +130,27 @@ function updateShrimp(game, dt) {
       const hoverTargetY = shrimp.hoverDepth + Math.sin((game.elapsed * 0.55) + shrimp.id * 0.31) * 16;
       tx = tx * (1 - shrimp.schoolingBias * 0.08) + hoverTargetX * (shrimp.schoolingBias * 0.08);
       ty = ty * (1 - shrimp.schoolingBias * 0.16) + hoverTargetY * (shrimp.schoolingBias * 0.16);
+
+      let centerX = 0;
+      let centerY = 0;
+      let neighbors = 0;
+      for (const other of game.shrimp) {
+        if (other === shrimp || other.stage !== shrimp.stage) continue;
+        const dx = other.x - shrimp.x;
+        const dy = other.y - shrimp.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 > 0 && d2 < 14000) {
+          centerX += other.x;
+          centerY += other.y;
+          neighbors += 1;
+        }
+      }
+      if (neighbors > 0) {
+        centerX /= neighbors;
+        centerY /= neighbors;
+        tx = tx * (1 - shrimp.schoolingBias * 0.12) + centerX * (shrimp.schoolingBias * 0.12);
+        ty = ty * (1 - shrimp.schoolingBias * 0.12) + centerY * (shrimp.schoolingBias * 0.12);
+      }
 
       if (shrimp.stage !== "nauplius") {
         const airDrift = Math.max(0, 1 - Math.abs(shrimp.x - W * 0.76) / 220);

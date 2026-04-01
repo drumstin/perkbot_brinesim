@@ -109,6 +109,11 @@ export function bindUi(game, elements) {
   elements.pause.addEventListener("click", handlePauseToggle);
   elements.speed.addEventListener("click", handleSpeedToggle);
   elements.waterChange.addEventListener("click", handleWaterChange);
+  elements.observeToggle?.addEventListener("click", () => {
+    game.observeMode = !game.observeMode;
+    elements.observeToggle.setAttribute("aria-pressed", game.observeMode ? "true" : "false");
+    saveGame(game);
+  });
 
   setHudOpen(elements, !window.matchMedia("(max-width: 640px)").matches);
   elements.hudToggle?.addEventListener("click", () => {
@@ -196,6 +201,11 @@ export function updateHud(game, elements) {
 
   const warnings = buildWarnings(game);
   elements.warnings.innerHTML = warnings.map((warning) => `<div class="warning-item ${warning.level}">${warning.text}</div>`).join("");
+
+  if (elements.observeToggle) {
+    elements.observeToggle.textContent = game.observeMode ? "🔍 Observing" : "🔍 Observe";
+    elements.observeToggle.setAttribute("aria-pressed", game.observeMode ? "true" : "false");
+  }
 
   if (elements.tankStatusBar) {
     elements.tankStatusBar.innerHTML = `

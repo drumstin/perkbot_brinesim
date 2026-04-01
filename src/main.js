@@ -11,6 +11,7 @@ const elements = {
   ctx,
   overlay: document.getElementById("overlay"),
   tankStatusBar: document.getElementById("tank-status-bar"),
+  observeToggle: document.getElementById("observe-toggle"),
   stats: document.getElementById("stats"),
   summary: document.getElementById("summary"),
   warnings: document.getElementById("warnings"),

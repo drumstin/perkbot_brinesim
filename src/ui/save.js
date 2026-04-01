@@ -5,6 +5,7 @@ export function saveGame(game) {
     started: game.colonyStarted,
     elapsed: game.elapsed,
     nextShrimpId: game.nextShrimpId,
+    observeMode: game.observeMode,
     tank: game.tank,
     milestones: game.milestones,
     shrimp: game.shrimp,

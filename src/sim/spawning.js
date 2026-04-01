@@ -70,7 +70,10 @@ export function makeEgg(x = rand(35, W - 35), y = rand(16, 36)) {
     y,
     r: rand(1.5, 2.4),
     sink: rand(6, 14),
-    hatchTimer: rand(18, 34)
+    hatchTimer: rand(18, 34),
+    hue: rand(26, 38),
+    wobble: rand(0, Math.PI * 2),
+    flash: 0
   };
 }
 

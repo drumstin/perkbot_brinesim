@@ -251,12 +251,27 @@ canvas {
   position: absolute;
   top: 12px;
   left: 72px;
-  right: 12px;
+  right: 110px;
   z-index: 3;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   pointer-events: none;
+}
+
+.observe-toggle {
+  position: absolute;
+  top: 12px;
+  right: 56px;
+  z-index: 5;
+  width: auto;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(4, 14, 22, 0.78);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
 }
 
 .status-chip {
@@ -475,13 +490,21 @@ canvas {
   .tank-status-bar {
     top: 12px;
     left: 64px;
-    right: 56px;
+    right: 104px;
     gap: 4px;
   }
 
   .status-chip {
     padding: 5px 8px;
     font-size: 0.72rem;
+  }
+
+  .observe-toggle {
+    top: 12px;
+    right: 58px;
+    min-height: 36px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
   }
 
   .tank-log-wrap {

@@ -28,6 +28,7 @@ export function createGame(elements) {
     eventSeq: 1,
     log: [],
     statsHistory: [],
+    observeMode: save?.observeMode ?? false,
     tank: {
       salinity: save?.tank?.salinity ?? 55,
       temperature: save?.tank?.temperature ?? 52,
@@ -84,6 +85,7 @@ export function restartGame(game) {
   game.eventSeq = 1;
   game.log = [];
   game.statsHistory = [];
+  game.observeMode = false;
   game.historyTimer = 0;
   game.milestones = {
     firstHatch: false,
