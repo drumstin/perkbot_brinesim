@@ -88,6 +88,28 @@ function updateFood(game, dt) {
 
 function maybeReproduce(game, shrimp, adults, dt) {
   if (shrimp.stage !== "adult") return;
+
+  if (shrimp.matingTimer > 0) {
+    shrimp.matingTimer -= dt;
+    const mate = shrimp.mateId ? game.shrimp.find((s) => s.id === shrimp.mateId) : null;
+    if (mate) {
+      const angle = game.elapsed * 8 + shrimp.id;
+      shrimp.x = clamp(mate.x + Math.cos(angle) * 8, 14, W - 14);
+      shrimp.y = clamp(mate.y + Math.sin(angle) * 8, 24, H - 20);
+    }
+    if (shrimp.matingTimer <= 0) {
+      const clutch = Math.random() < 0.7 ? 1 : 2;
+      const bodySize = currentSize(shrimp);
+      addEggBatch(game, clutch, shrimp.x - bodySize * 1.2, shrimp.y + rand(-2, 2), bodySize * 1.4);
+      shrimp.brood = 0.15;
+      shrimp.energy *= 0.72;
+      shrimp.broodCooldown = rand(16, 28);
+      shrimp.mateId = null;
+      addEvent(game, `Adult #${shrimp.id} finished mating and released ${clutch} egg${clutch === 1 ? "" : "s"}.`);
+    }
+    return;
+  }
+
   shrimp.broodCooldown -= dt;
   if (shrimp.broodCooldown > 0) return;
 
@@ -95,14 +117,23 @@ function maybeReproduce(game, shrimp, adults, dt) {
   const broodGain = clamp((shrimp.energy - 55) / 70 + game.tank.stability * 0.7 - densityPenalty, 0, 0.08) * shrimp.fertility;
   shrimp.brood = clamp(shrimp.brood + broodGain, 0, 1.25);
 
-  if (shrimp.brood > 1 && game.tank.oxygen > 45 && game.tank.waste < 55) {
-    const clutch = Math.random() < 0.7 ? 1 : 2;
-    const bodySize = currentSize(shrimp);
-    addEggBatch(game, clutch, shrimp.x - bodySize * 1.4, shrimp.y + rand(-2, 2), bodySize * 1.8);
-    shrimp.brood = 0.15;
-    shrimp.energy *= 0.7;
-    shrimp.broodCooldown = rand(12, 22);
-    addEvent(game, `Adult #${shrimp.id} released ${clutch} egg${clutch === 1 ? "" : "s"}.`);
+  if (shrimp.brood > 1 && game.tank.oxygen > 45 && game.tank.waste < 55 && Math.random() < 0.08) {
+    const mate = game.shrimp.find((other) => (
+      other !== shrimp
+      && other.stage === "adult"
+      && other.matingTimer <= 0
+      && other.broodCooldown <= 0
+      && Math.hypot(other.x - shrimp.x, other.y - shrimp.y) < 80
+    ));
+
+    if (mate) {
+      const matingDuration = rand(1.2, 2.1);
+      shrimp.matingTimer = matingDuration;
+      mate.matingTimer = matingDuration;
+      shrimp.mateId = mate.id;
+      mate.mateId = shrimp.id;
+      addEvent(game, `Adults #${shrimp.id} and #${mate.id} paired and began mating.`);
+    }
   }
 }
 
