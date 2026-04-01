@@ -35,7 +35,9 @@ export function createGame(elements) {
     upgrades: {
       filter: save?.upgrades?.filter ?? 0,
       skimmer: save?.upgrades?.skimmer ?? 0,
-      bioMedia: save?.upgrades?.bioMedia ?? 0
+      bioMedia: save?.upgrades?.bioMedia ?? 0,
+      autoFeeder: save?.upgrades?.autoFeeder ?? 0,
+      nursery: save?.upgrades?.nursery ?? 0
     },
     tank: {
       salinity: save?.tank?.salinity ?? 55,
@@ -100,7 +102,9 @@ export function restartGame(game) {
   game.upgrades = {
     filter: 0,
     skimmer: 0,
-    bioMedia: 0
+    bioMedia: 0,
+    autoFeeder: 0,
+    nursery: 0
   };
   game.historyTimer = 0;
   game.milestones = {

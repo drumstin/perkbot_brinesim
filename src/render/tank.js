@@ -106,6 +106,33 @@ function drawUpgrades(game, ctx) {
       ctx.fill();
     }
   }
+
+  const feederLevel = game.upgrades?.autoFeeder ?? 0;
+  if (feederLevel > 0) {
+    for (let i = 0; i < feederLevel; i += 1) {
+      const x = W * 0.24 + i * 26;
+      const y = 34;
+      ctx.fillStyle = "rgba(186, 190, 204, 0.92)";
+      ctx.fillRect(x, y, 16, 16);
+      ctx.fillStyle = "rgba(114, 230, 122, 0.45)";
+      ctx.beginPath();
+      ctx.arc(x + 8, y + 24, 2.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const nurseryLevel = game.upgrades?.nursery ?? 0;
+  if (nurseryLevel > 0) {
+    for (let i = 0; i < nurseryLevel; i += 1) {
+      const x = W * 0.14 + i * 28;
+      const y = H * 0.18 + i * 10;
+      ctx.strokeStyle = "rgba(245, 228, 176, 0.7)";
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.ellipse(x, y, 14, 18, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
 }
 
 function drawEggs(game, ctx) {

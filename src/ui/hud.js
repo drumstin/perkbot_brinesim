@@ -13,7 +13,9 @@ export const COSTS = {
 const UPGRADE_COSTS = {
   filter: [18, 34, 55],
   skimmer: [16, 30, 48],
-  bioMedia: [20, 36, 58]
+  bioMedia: [20, 36, 58],
+  autoFeeder: [28, 46, 70],
+  nursery: [26, 42, 64]
 };
 
 function clamp(value, min, max) {
@@ -267,12 +269,24 @@ export function updateHud(game, elements) {
     elements.observeToggle.classList.toggle("active", game.observeMode);
   }
 
-  if (elements.addEggs) elements.addEggs.textContent = `Add Eggs (${COSTS.eggs})`;
-  if (elements.feedLight) elements.feedLight.textContent = `Light Feed (${COSTS.lightFeed})`;
-  if (elements.feedHeavy) elements.feedHeavy.textContent = `Heavy Feed (${COSTS.heavyFeed})`;
-  if (elements.waterChange) elements.waterChange.textContent = game.tank.waterChangeCooldown > 0
-    ? `Water Change (${Math.ceil(game.tank.waterChangeCooldown)}s)`
-    : `Water Change (${COSTS.waterChange})`;
+  if (elements.addEggs) {
+    elements.addEggs.textContent = `Add Eggs (${COSTS.eggs})`;
+    elements.addEggs.disabled = game.points < COSTS.eggs;
+  }
+  if (elements.feedLight) {
+    elements.feedLight.textContent = `Light Feed (${COSTS.lightFeed})`;
+    elements.feedLight.disabled = game.points < COSTS.lightFeed;
+  }
+  if (elements.feedHeavy) {
+    elements.feedHeavy.textContent = `Heavy Feed (${COSTS.heavyFeed})`;
+    elements.feedHeavy.disabled = game.points < COSTS.heavyFeed;
+  }
+  if (elements.waterChange) {
+    elements.waterChange.textContent = game.tank.waterChangeCooldown > 0
+      ? `Water Change (${Math.ceil(game.tank.waterChangeCooldown)}s)`
+      : `Water Change (${COSTS.waterChange})`;
+    elements.waterChange.disabled = game.tank.waterChangeCooldown > 0 || game.points < COSTS.waterChange;
+  }
 
   if (elements.tankStatusBar) {
     elements.tankStatusBar.innerHTML = `
@@ -309,7 +323,9 @@ export function updateHud(game, elements) {
     const shopItems = [
       ["filter", "Mechanical Filter", "Reduces suspended waste build-up."],
       ["skimmer", "Surface Skimmer", "Adds oxygen and clears top-layer gunk."],
-      ["bioMedia", "Bio Media", "Improves beneficial filtration stability."]
+      ["bioMedia", "Bio Media", "Improves beneficial filtration stability."],
+      ["autoFeeder", "Auto Feeder", "Adds a small steady trickle of food over time."],
+      ["nursery", "Nursery Chamber", "Improves hatch survival and early colony stability."]
     ];
     elements.shop.innerHTML = shopItems.map(([key, label, desc]) => {
       const level = game.upgrades[key] ?? 0;
@@ -332,14 +348,23 @@ export function updateHud(game, elements) {
     });
   }
 
-  if (elements.quickAddEggs) elements.quickAddEggs.textContent = `🥚 Add Eggs (${COSTS.eggs})`;
-  if (elements.quickFeedLight) elements.quickFeedLight.textContent = `🌿 Light Feed (${COSTS.lightFeed})`;
-  if (elements.quickFeedHeavy) elements.quickFeedHeavy.textContent = `🍽️ Heavy Feed (${COSTS.heavyFeed})`;
+  if (elements.quickAddEggs) {
+    elements.quickAddEggs.textContent = `🥚 Add Eggs (${COSTS.eggs})`;
+    elements.quickAddEggs.disabled = game.points < COSTS.eggs;
+  }
+  if (elements.quickFeedLight) {
+    elements.quickFeedLight.textContent = `🌿 Light Feed (${COSTS.lightFeed})`;
+    elements.quickFeedLight.disabled = game.points < COSTS.lightFeed;
+  }
+  if (elements.quickFeedHeavy) {
+    elements.quickFeedHeavy.textContent = `🍽️ Heavy Feed (${COSTS.heavyFeed})`;
+    elements.quickFeedHeavy.disabled = game.points < COSTS.heavyFeed;
+  }
   if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️ Resume" : "⏸️ Pause";
   if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩ Speed x1" : game.timeScale === 2 ? "⏩ Speed x2" : "⏩ Speed x4";
   if (elements.quickWaterChange) {
     elements.quickWaterChange.textContent = game.tank.waterChangeCooldown > 0 ? `💧 Cooldown ${Math.ceil(game.tank.waterChangeCooldown)}s` : `💧 Water Change (${COSTS.waterChange})`;
-    elements.quickWaterChange.disabled = game.tank.waterChangeCooldown > 0;
+    elements.quickWaterChange.disabled = game.tank.waterChangeCooldown > 0 || game.points < COSTS.waterChange;
   }
 
   elements.registry.value = game.shrimp.length > 0

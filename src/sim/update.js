@@ -29,7 +29,8 @@ function updateTank(game, dt) {
   const skimmerBonus = (game.upgrades.skimmer ?? 0) * 0.45;
   const bioBonus = (game.upgrades.bioMedia ?? 0) * 0.4;
 
-  game.tank.foodLevel = clamp(game.tank.foodLevel - dt * (0.55 + game.shrimp.length * 0.022), 0, 100);
+  const autoFeederBonus = (game.upgrades.autoFeeder ?? 0) * 0.16;
+  game.tank.foodLevel = clamp(game.tank.foodLevel - dt * (0.55 + game.shrimp.length * 0.022) + dt * autoFeederBonus, 0, 100);
   game.tank.waste = clamp(
     game.tank.waste + dt * (populationPressure * 0.085 + game.food.length * 0.02 + game.corpses.length * 0.24)
       - dt * (0.65 + aerationPower * 1.65 + filterBonus + bioBonus),
@@ -57,7 +58,8 @@ function updateEggs(game, dt) {
     egg.flash = clamp01((7 - egg.hatchTimer) / 7);
 
     if (egg.hatchTimer <= 0) {
-      const hatchChance = game.tank.stability * 0.7 + game.tank.oxygen / 200 - game.tank.waste / 180;
+      const nurseryBonus = (game.upgrades.nursery ?? 0) * 0.06;
+      const hatchChance = game.tank.stability * 0.7 + game.tank.oxygen / 200 - game.tank.waste / 180 + nurseryBonus;
       if (Math.random() < hatchChance) {
         game.shrimp.push(makeShrimp(game, egg.x + rand(-3, 3), egg.y + rand(-3, 3)));
         game.points += 2;
