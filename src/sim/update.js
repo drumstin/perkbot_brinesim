@@ -102,7 +102,9 @@ function maybeReproduce(game, shrimp, adults, dt) {
       shrimp.y = clamp(cy + Math.sin(angle) * radius * 0.75, 24, H - 20);
       shrimp.vx = Math.cos(angle + Math.PI / 2) * 0.7;
       shrimp.vy = Math.sin(angle + Math.PI / 2) * 0.5;
-      shrimp.swirlHeading = Math.atan2(shrimp.vy, shrimp.vx);
+      const faceMate = Math.atan2(mate.y - shrimp.y, mate.x - shrimp.x);
+      const moveHeading = Math.atan2(shrimp.vy, shrimp.vx);
+      shrimp.swirlHeading = moveHeading * 0.55 + faceMate * 0.45;
     }
     if (shrimp.matingTimer <= 0) {
       const clutch = Math.random() < 0.7 ? 1 : 2;
@@ -201,6 +203,19 @@ function updateShrimp(game, dt) {
       if (shrimp.stage !== "nauplius") {
         const airDrift = Math.max(0, 1 - Math.abs(shrimp.x - W * 0.76) / 220);
         ty -= airDrift * 6 * (0.3 + shrimp.schoolingBias * 0.7);
+      }
+    }
+
+    for (const other of game.shrimp) {
+      if (other === shrimp || other.matingTimer <= 0) continue;
+      const dx = shrimp.x - other.x;
+      const dy = shrimp.y - other.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 > 0 && d2 < 3600) {
+        const d = Math.sqrt(d2);
+        const scare = (1 - d / 60) * 0.18;
+        shrimp.vx += (dx / d) * scare;
+        shrimp.vy += (dy / d) * scare;
       }
     }
 
