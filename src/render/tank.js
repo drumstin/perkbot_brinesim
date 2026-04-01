@@ -180,9 +180,23 @@ function drawShrimp(game, ctx) {
     const pulse = Math.sin(swimCycle * 0.7);
     const energyFactor = Math.max(0.35, Math.min(1, s.energy / 100));
     const bodyLight = 42 + energyFactor * 24;
+    const matingGlow = s.matingTimer > 0 ? Math.max(0, Math.sin(game.elapsed * 16)) * 0.22 + 0.1 : 0;
     ctx.save();
     ctx.translate(s.x, s.y);
     ctx.rotate(heading + wiggle * 0.06);
+
+    if (matingGlow > 0) {
+      ctx.fillStyle = `rgba(255, 210, 150, ${matingGlow})`;
+      ctx.beginPath();
+      ctx.arc(0, 0, size * 3.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = `rgba(255, 236, 196, ${matingGlow * 0.9})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, size * 3.8, size * 2.1, pulse * 0.2, 0, Math.PI * 2);
+      ctx.stroke();
+    }
 
     const larvalProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 6) / 42));
     const adultProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 26) / 72));
