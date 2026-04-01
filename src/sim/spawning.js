@@ -17,13 +17,24 @@ export function stageForAge(age) {
 }
 
 export function currentSize(shrimp) {
-  const stages = {
-    nauplius: 1.1,
-    juvenile: 3.2,
-    adult: shrimp.adultSize,
-    elder: shrimp.adultSize * 0.95
-  };
-  return stages[shrimp.stage] ?? shrimp.adultSize;
+  const age = shrimp.age ?? 0;
+
+  if (age < 18) {
+    const t = growthFactor(age / 18);
+    return 1.1 + (3.2 - 1.1) * t;
+  }
+
+  if (age < 70) {
+    const t = growthFactor((age - 18) / (70 - 18));
+    return 3.2 + (shrimp.adultSize - 3.2) * t;
+  }
+
+  if (age < 220) {
+    return shrimp.adultSize;
+  }
+
+  const t = growthFactor(Math.min(1, (age - 220) / 120));
+  return shrimp.adultSize * (1 - t * 0.05);
 }
 
 export function makeShrimp(game, x = rand(40, W - 40), y = rand(60, H - 40)) {
