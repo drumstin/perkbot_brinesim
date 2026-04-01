@@ -21,19 +21,24 @@ export function currentSize(shrimp) {
 
   if (age < 18) {
     const t = growthFactor(age / 18);
-    return 1.1 + (3.2 - 1.1) * t;
+    return 1.1 + (2.6 - 1.1) * t;
   }
 
-  if (age < 120) {
-    const t = growthFactor((age - 18) / (120 - 18));
-    return 3.2 + (shrimp.adultSize - 3.2) * t;
+  if (age < 70) {
+    const t = growthFactor((age - 18) / (70 - 18));
+    return 2.6 + (4.3 - 2.6) * t;
   }
 
-  if (age < 220) {
+  if (age < 180) {
+    const t = growthFactor((age - 70) / (180 - 70));
+    return 4.3 + (shrimp.adultSize - 4.3) * t;
+  }
+
+  if (age < 260) {
     return shrimp.adultSize;
   }
 
-  const t = growthFactor(Math.min(1, (age - 220) / 120));
+  const t = growthFactor(Math.min(1, (age - 260) / 120));
   return shrimp.adultSize * (1 - t * 0.05);
 }
 
