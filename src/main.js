@@ -2,6 +2,7 @@ import { createGame } from "./state.js";
 import { updateGame } from "./sim/update.js";
 import { renderGame } from "./render/tank.js";
 import { updateHud, bindUi } from "./ui/hud.js";
+import { clearSave } from "./ui/save.js";
 
 const canvas = document.getElementById("tank");
 const ctx = canvas.getContext("2d");
@@ -45,9 +46,41 @@ const elements = {
   quickPause: document.getElementById("quick-pause")
 };
 
+clearSave();
+
+async function requestFullscreenAtStartup() {
+  const root = document.documentElement;
+  try {
+    if (!document.fullscreenElement && root.requestFullscreen) {
+      await root.requestFullscreen();
+    }
+  } catch {
+    // Mobile browsers often require a user gesture.
+  }
+}
+
+function requestFullscreenOnFirstInteraction() {
+  const root = document.documentElement;
+  const tryFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement && root.requestFullscreen) {
+        await root.requestFullscreen();
+      }
+    } catch {
+      // Ignore if blocked.
+    }
+    window.removeEventListener("pointerdown", tryFullscreen);
+    window.removeEventListener("touchstart", tryFullscreen);
+  };
+
+  window.addEventListener("pointerdown", tryFullscreen, { once: true });
+  window.addEventListener("touchstart", tryFullscreen, { once: true });
+}
+
 const game = createGame(elements);
 bindUi(game, elements);
-
+requestFullscreenAtStartup();
+requestFullscreenOnFirstInteraction();
 
 updateHud(game, elements);
 renderGame(game, elements);

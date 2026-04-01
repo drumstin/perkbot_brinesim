@@ -22,10 +22,9 @@ export function saveGame(game) {
 }
 
 export function loadSave() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
+  return null;
+}
+
+export function clearSave() {
+  localStorage.removeItem(KEY);
 }
