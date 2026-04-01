@@ -48,7 +48,7 @@ export function createGame(elements) {
       foodLevel: save?.tank?.foodLevel ?? 12,
       clarity: save?.tank?.clarity ?? 0.9,
       stability: 1,
-      waterChangeCooldown: save?.tank?.waterChangeCooldown ?? 0
+      waterChangeCooldown: 0
     },
     milestones: {
       firstHatch: false,

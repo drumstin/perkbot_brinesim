@@ -79,10 +79,6 @@ function setEventLogOpen(elements, open) {
 }
 
 function performWaterChange(game) {
-  if (game.tank.waterChangeCooldown > 0) {
-    addEvent(game, `Water change unavailable for ${Math.ceil(game.tank.waterChangeCooldown)}s.`);
-    return;
-  }
   if (!spendPoints(game, COSTS.waterChange, "a water change")) {
     saveGame(game);
     return;
@@ -92,7 +88,6 @@ function performWaterChange(game) {
   game.tank.oxygen = clamp(game.tank.oxygen + 10, 0, 100);
   game.tank.foodLevel = clamp(game.tank.foodLevel - 4, 0, 100);
   game.tank.clarity = clamp(game.tank.clarity + 0.12, 0.2, 1);
-  game.tank.waterChangeCooldown = 18;
   addEvent(game, "Partial water change completed.");
   saveGame(game);
 }
@@ -257,7 +252,7 @@ export function updateHud(game, elements) {
     <div class="summary-item">Tank stability: <strong>${Math.round(game.tank.stability * 100)}%</strong></div>
     <div class="summary-item">Time: <strong>${game.elapsed.toFixed(1)}s</strong></div>
     <div class="summary-item">Points: <strong>${Math.round(game.points)}</strong></div>
-    <div class="summary-item">Water change: <strong>${game.tank.waterChangeCooldown > 0 ? `${Math.ceil(game.tank.waterChangeCooldown)}s cooldown` : `${COSTS.waterChange} pts`}</strong></div>
+    <div class="summary-item">Water change: <strong>${COSTS.waterChange} pts</strong></div>
   `;
 
   const warnings = buildWarnings(game);
@@ -282,10 +277,8 @@ export function updateHud(game, elements) {
     elements.feedHeavy.disabled = game.points < COSTS.heavyFeed;
   }
   if (elements.waterChange) {
-    elements.waterChange.textContent = game.tank.waterChangeCooldown > 0
-      ? `Water Change (${Math.ceil(game.tank.waterChangeCooldown)}s)`
-      : `Water Change (${COSTS.waterChange})`;
-    elements.waterChange.disabled = game.tank.waterChangeCooldown > 0 || game.points < COSTS.waterChange;
+    elements.waterChange.textContent = `Water Change (${COSTS.waterChange})`;
+    elements.waterChange.disabled = game.points < COSTS.waterChange;
   }
 
   if (elements.tankStatusBar) {
@@ -363,8 +356,8 @@ export function updateHud(game, elements) {
   if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️ Resume" : "⏸️ Pause";
   if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩ Speed x1" : game.timeScale === 2 ? "⏩ Speed x2" : "⏩ Speed x4";
   if (elements.quickWaterChange) {
-    elements.quickWaterChange.textContent = game.tank.waterChangeCooldown > 0 ? `💧 Cooldown ${Math.ceil(game.tank.waterChangeCooldown)}s` : `💧 Water Change (${COSTS.waterChange})`;
-    elements.quickWaterChange.disabled = game.tank.waterChangeCooldown > 0 || game.points < COSTS.waterChange;
+    elements.quickWaterChange.textContent = `💧 Water Change (${COSTS.waterChange})`;
+    elements.quickWaterChange.disabled = game.points < COSTS.waterChange;
   }
 
   elements.registry.value = game.shrimp.length > 0

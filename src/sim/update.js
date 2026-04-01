@@ -43,7 +43,6 @@ function updateTank(game, dt) {
     0,
     100
   );
-  game.tank.waterChangeCooldown = clamp(game.tank.waterChangeCooldown - dt, 0, 999);
 }
 
 function updateEggs(game, dt) {
