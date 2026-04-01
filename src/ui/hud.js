@@ -235,6 +235,10 @@ export function bindUi(game, elements) {
     handleWaterChange();
     setQuickMenuOpen(elements, false);
   });
+  bindPress(elements.quickOpenShop, () => {
+    setHudOpen(elements, true);
+    setQuickMenuOpen(elements, false);
+  });
 
   elements.restart.addEventListener("click", () => {
     restartGame(game);

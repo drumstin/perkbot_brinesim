@@ -40,6 +40,7 @@ const elements = {
   quickFeedLight: document.getElementById("quick-feed-light"),
   quickFeedHeavy: document.getElementById("quick-feed-heavy"),
   quickWaterChange: document.getElementById("quick-water-change"),
+  quickOpenShop: document.getElementById("quick-open-shop"),
   quickSpeed: document.getElementById("quick-speed"),
   quickPause: document.getElementById("quick-pause")
 };
