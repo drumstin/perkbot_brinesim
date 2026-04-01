@@ -93,9 +93,15 @@ function maybeReproduce(game, shrimp, adults, dt) {
     shrimp.matingTimer -= dt;
     const mate = shrimp.mateId ? game.shrimp.find((s) => s.id === shrimp.mateId) : null;
     if (mate) {
-      const angle = game.elapsed * 8 + shrimp.id;
-      shrimp.x = clamp(mate.x + Math.cos(angle) * 8, 14, W - 14);
-      shrimp.y = clamp(mate.y + Math.sin(angle) * 8, 24, H - 20);
+      const cx = (shrimp.x + mate.x) * 0.5;
+      const cy = (shrimp.y + mate.y) * 0.5;
+      const phase = shrimp.id < mate.id ? 0 : Math.PI;
+      const angle = game.elapsed * 10 + (shrimp.id + mate.id) * 0.17 + phase;
+      const radius = 6 + Math.sin(game.elapsed * 6 + shrimp.id) * 1.4;
+      shrimp.x = clamp(cx + Math.cos(angle) * radius, 14, W - 14);
+      shrimp.y = clamp(cy + Math.sin(angle) * radius * 0.75, 24, H - 20);
+      shrimp.vx = Math.cos(angle + Math.PI / 2) * 0.7;
+      shrimp.vy = Math.sin(angle + Math.PI / 2) * 0.5;
     }
     if (shrimp.matingTimer <= 0) {
       const clutch = Math.random() < 0.7 ? 1 : 2;
