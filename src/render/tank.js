@@ -189,7 +189,7 @@ function drawShrimp(game, ctx) {
     const bodyAlpha = s.stage === "elder" ? 0.68 : 0.82;
     const shellAlpha = s.stage === "elder" ? 0.2 : 0.3;
     const tailWave = wiggle * size * 0.55;
-    const abdomenSegments = Math.round(2 + larvalProgress * 1.2 + adultProgress * 4.4);
+    const abdomenSegments = 7;
 
     const glow = 0.16 + energyFactor * 0.12;
     ctx.fillStyle = `hsla(${s.hue + 16 - larvalProgress * 8} ${88 - larvalProgress * 14}% ${60 + energyFactor * 18 - larvalProgress * 6}% / ${0.82 - larvalProgress * 0.08})`;
@@ -252,15 +252,17 @@ function drawShrimp(game, ctx) {
     ctx.fillStyle = `hsla(${s.hue + 2} 68% ${bodyLight - 2}% / ${bodyAlpha})`;
     for (let i = 0; i < abdomenSegments; i += 1) {
       const t = i / (abdomenSegments - 1);
-      const x = size * 1.0 - t * size * 5.8;
-      const segW = size * (1.45 - t * 0.72);
-      const segH = size * (0.95 - t * 0.5);
-      const bend = Math.sin(swimCycle - i * 0.72) * (0.28 + t * 0.95) + tailWave * t;
+      const maturityAtSegment = Math.max(0, Math.min(1, larvalProgress * 1.1 - t * 0.38 + adultProgress * 0.45));
+      const x = size * 1.0 - t * size * (4.2 + larvalProgress * 1.6);
+      const segW = size * (1.55 - t * 0.68) * (0.78 + maturityAtSegment * 0.22);
+      const segH = size * (1.02 - t * 0.48) * (0.82 + maturityAtSegment * 0.18);
+      const bend = Math.sin(swimCycle - i * 0.72) * (0.18 + t * 0.7 + maturityAtSegment * 0.22) + tailWave * t * maturityAtSegment;
+      ctx.fillStyle = `hsla(${s.hue + 2 + i * 0.6} ${68 - t * 6}% ${bodyLight - 2 - t * 2}% / ${bodyAlpha * (0.18 + maturityAtSegment * 0.82)})`;
       ctx.beginPath();
       ctx.ellipse(x, bend, segW, segH, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.strokeStyle = `rgba(255, 244, 224, ${0.12 + (1 - t) * 0.18})`;
+      ctx.strokeStyle = `rgba(255, 244, 224, ${(0.04 + (1 - t) * 0.14) * maturityAtSegment})`;
       ctx.lineWidth = 0.7;
       ctx.beginPath();
       ctx.moveTo(x - segW * 0.55, bend - segH * 0.85);
@@ -268,33 +270,32 @@ function drawShrimp(game, ctx) {
       ctx.stroke();
     }
 
-    const legCount = Math.max(2, Math.round(2 + adultProgress * 3 + larvalProgress * 1));
-    ctx.strokeStyle = `rgba(255, 238, 210, ${0.1 + larvalProgress * 0.08 + adultProgress * 0.14})`;
-    ctx.lineWidth = 0.9;
+    const legCount = 6;
     for (let i = 0; i < legCount; i += 1) {
       const t = i / Math.max(1, legCount - 1);
+      const appendageMaturity = Math.max(0, Math.min(1, larvalProgress * 1.05 - t * 0.22 + adultProgress * 0.35));
       const anchorX = size * 0.8 - t * size * 3.2;
       const flap = Math.sin(swimCycle * 1.6 + i * 0.9) * size * 0.9;
+      ctx.strokeStyle = `rgba(255, 238, 210, ${0.04 + appendageMaturity * 0.22})`;
+      ctx.lineWidth = 0.4 + appendageMaturity * 0.5;
       ctx.beginPath();
       ctx.moveTo(anchorX, -0.2);
-      ctx.quadraticCurveTo(anchorX - size * 0.35, -size * 1.1 - flap * 0.18, anchorX - size * 0.9, -size * 1.8 - flap * 0.35);
+      ctx.quadraticCurveTo(anchorX - size * 0.35, -size * (0.5 + appendageMaturity * 0.6) - flap * 0.18, anchorX - size * (0.45 + appendageMaturity * 0.45), -size * (0.7 + appendageMaturity * 1.1) - flap * 0.35);
       ctx.moveTo(anchorX, 0.2);
-      ctx.quadraticCurveTo(anchorX - size * 0.35, size * 1.1 + flap * 0.18, anchorX - size * 0.9, size * 1.8 + flap * 0.35);
+      ctx.quadraticCurveTo(anchorX - size * 0.35, size * (0.5 + appendageMaturity * 0.6) + flap * 0.18, anchorX - size * (0.45 + appendageMaturity * 0.45), size * (0.7 + appendageMaturity * 1.1) + flap * 0.35);
       ctx.stroke();
 
-      ctx.strokeStyle = "rgba(255, 242, 220, 0.18)";
-      ctx.lineWidth = 0.55;
+      ctx.strokeStyle = `rgba(255, 242, 220, ${appendageMaturity * 0.14})`;
+      ctx.lineWidth = 0.3 + appendageMaturity * 0.25;
       for (let fil = 0; fil < 3; fil += 1) {
         const offset = (fil - 1) * size * 0.18;
         ctx.beginPath();
-        ctx.moveTo(anchorX - size * 0.35, offset);
-        ctx.quadraticCurveTo(anchorX - size * 0.7, offset - size * 0.45 - flap * 0.08, anchorX - size * 1.05, offset - size * 0.75 - flap * 0.16);
-        ctx.moveTo(anchorX - size * 0.35, -offset);
-        ctx.quadraticCurveTo(anchorX - size * 0.7, -offset + size * 0.45 + flap * 0.08, anchorX - size * 1.05, -offset + size * 0.75 + flap * 0.16);
+        ctx.moveTo(anchorX - size * 0.2, offset * appendageMaturity);
+        ctx.quadraticCurveTo(anchorX - size * 0.45, offset - size * 0.22 - flap * 0.05, anchorX - size * (0.45 + appendageMaturity * 0.6), offset - size * (0.25 + appendageMaturity * 0.5) - flap * 0.1);
+        ctx.moveTo(anchorX - size * 0.2, -offset * appendageMaturity);
+        ctx.quadraticCurveTo(anchorX - size * 0.45, -offset + size * 0.22 + flap * 0.05, anchorX - size * (0.45 + appendageMaturity * 0.6), -offset + size * (0.25 + appendageMaturity * 0.5) + flap * 0.1);
         ctx.stroke();
       }
-      ctx.strokeStyle = "rgba(255, 238, 210, 0.36)";
-      ctx.lineWidth = 0.9;
     }
 
     ctx.strokeStyle = "rgba(255, 226, 190, 0.68)";
