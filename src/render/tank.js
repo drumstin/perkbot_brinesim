@@ -184,12 +184,12 @@ function drawShrimp(game, ctx) {
     ctx.translate(s.x, s.y);
     ctx.rotate(heading + wiggle * 0.06);
 
-    const larvalProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 4) / 30));
-    const adultProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 22) / 58));
+    const larvalProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 6) / 42));
+    const adultProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 26) / 72));
     const bodyAlpha = s.stage === "elder" ? 0.68 : 0.82;
     const shellAlpha = s.stage === "elder" ? 0.2 : 0.3;
     const tailWave = wiggle * size * 0.55;
-    const abdomenSegments = Math.round(2 + larvalProgress * 2 + adultProgress * 4);
+    const abdomenSegments = Math.round(2 + larvalProgress * 1.2 + adultProgress * 4.4);
 
     const glow = 0.16 + energyFactor * 0.12;
     ctx.fillStyle = `hsla(${s.hue + 16 - larvalProgress * 8} ${88 - larvalProgress * 14}% ${60 + energyFactor * 18 - larvalProgress * 6}% / ${0.82 - larvalProgress * 0.08})`;
@@ -216,7 +216,7 @@ function drawShrimp(game, ctx) {
     ctx.arc(size * (0.52 + larvalProgress * 0.45), -0.2, Math.max(0.28, size * 0.12), 0, Math.PI * 2);
     ctx.fill();
 
-    if (larvalProgress < 0.22) {
+    if (larvalProgress < 0.34) {
       ctx.restore();
       continue;
     }
@@ -268,8 +268,8 @@ function drawShrimp(game, ctx) {
       ctx.stroke();
     }
 
-    const legCount = Math.max(2, Math.round(2 + adultProgress * 4));
-    ctx.strokeStyle = `rgba(255, 238, 210, ${0.16 + adultProgress * 0.2})`;
+    const legCount = Math.max(2, Math.round(2 + adultProgress * 3 + larvalProgress * 1));
+    ctx.strokeStyle = `rgba(255, 238, 210, ${0.1 + larvalProgress * 0.08 + adultProgress * 0.14})`;
     ctx.lineWidth = 0.9;
     for (let i = 0; i < legCount; i += 1) {
       const t = i / Math.max(1, legCount - 1);
