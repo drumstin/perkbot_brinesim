@@ -463,6 +463,16 @@ canvas {
     box-shadow: 0 -6px 30px rgba(0, 0, 0, 0.45);
   }
 
+  .hud::before {
+    content: "";
+    display: block;
+    width: 42px;
+    height: 4px;
+    margin: 0 auto 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.22);
+  }
+
   .feed-buttons,
   .utility-buttons {
     display: none;
@@ -471,10 +481,19 @@ canvas {
   .hud-toggle {
     display: block;
     margin-bottom: 0;
+    min-height: 34px;
+    padding: 6px 10px;
+    font-size: 0.82rem;
   }
 
   .hud.hud-collapsed {
-    padding-bottom: 10px;
+    padding: 6px 8px 8px;
+    background: rgba(8, 24, 38, 0.78);
+    backdrop-filter: blur(10px);
+  }
+
+  .hud.hud-collapsed::before {
+    margin-bottom: 6px;
   }
 
   .hud.hud-collapsed .hud-toggle {
@@ -509,7 +528,7 @@ canvas {
 
   .tank-wrap {
     padding: 4px;
-    margin-bottom: 60px;
+    margin-bottom: 44px;
   }
 
   .overlay {
