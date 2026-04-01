@@ -64,6 +64,50 @@ function drawFood(game, ctx) {
   }
 }
 
+function drawUpgrades(game, ctx) {
+  const filterLevel = game.upgrades?.filter ?? 0;
+  const skimmerLevel = game.upgrades?.skimmer ?? 0;
+  const bioLevel = game.upgrades?.bioMedia ?? 0;
+
+  if (filterLevel > 0) {
+    for (let i = 0; i < filterLevel; i += 1) {
+      const x = 74 + i * 24;
+      const y = H - SUBSTRATE_HEIGHT - 36;
+      ctx.fillStyle = "rgba(140, 162, 174, 0.9)";
+      ctx.fillRect(x, y, 14, 28);
+      ctx.fillStyle = "rgba(82, 107, 120, 0.85)";
+      ctx.fillRect(x + 2, y + 4, 10, 4);
+      ctx.fillRect(x + 2, y + 12, 10, 4);
+      ctx.fillRect(x + 2, y + 20, 10, 4);
+    }
+  }
+
+  if (skimmerLevel > 0) {
+    for (let i = 0; i < skimmerLevel; i += 1) {
+      const x = W - 170 + i * 28;
+      const y = 26 + i * 6;
+      ctx.fillStyle = "rgba(189, 220, 235, 0.88)";
+      ctx.fillRect(x, y, 18, 10);
+      ctx.strokeStyle = "rgba(235, 248, 255, 0.55)";
+      ctx.beginPath();
+      ctx.moveTo(x, y + 10);
+      ctx.lineTo(x + 18, y + 10);
+      ctx.stroke();
+    }
+  }
+
+  if (bioLevel > 0) {
+    for (let i = 0; i < bioLevel; i += 1) {
+      const x = 40 + i * 18;
+      const y = H - SUBSTRATE_HEIGHT + 4;
+      ctx.fillStyle = `rgba(120, ${148 + i * 18}, 90, 0.9)`;
+      ctx.beginPath();
+      ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
 function drawEggs(game, ctx) {
   for (const e of game.eggs) {
     const hatchGlow = e.flash ? e.flash * (0.18 + 0.12 * Math.sin(e.wobble * 2)) : 0;
@@ -307,6 +351,7 @@ export function renderGame(game, elements) {
   }
   drawTankBackground(game, ctx);
   drawBubbles(game, ctx);
+  drawUpgrades(game, ctx);
   drawFood(game, ctx);
   drawEggs(game, ctx);
   drawCorpses(game, ctx);

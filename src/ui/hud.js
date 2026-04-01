@@ -169,7 +169,8 @@ export function bindUi(game, elements) {
     saveGame(game);
   });
 
-  elements.shop?.addEventListener("click", (event) => {
+  elements.shop?.addEventListener("pointerup", (event) => {
+    event.preventDefault();
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
     const button = target.closest("button[data-upgrade]");
