@@ -242,6 +242,7 @@ button:hover {
 canvas {
   width: 100%;
   height: auto;
+  aspect-ratio: 16 / 10;
   max-height: calc(100dvh - 32px);
   display: block;
   border-radius: 12px;
