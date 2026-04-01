@@ -93,7 +93,7 @@ function maybeReproduce(game, shrimp, adults, dt) {
 
   if (shrimp.brood > 1 && game.tank.oxygen > 45 && game.tank.waste < 55) {
     const clutch = Math.round(rand(3, 7));
-    addEggBatch(game, clutch);
+    addEggBatch(game, clutch, shrimp.x - bodySize * 1.4, shrimp.y + rand(-2, 2), bodySize * 1.8);
     shrimp.brood = 0.15;
     shrimp.energy *= 0.7;
     shrimp.broodCooldown = rand(10, 18);

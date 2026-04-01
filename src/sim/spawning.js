@@ -97,8 +97,12 @@ export function makeBubble() {
   };
 }
 
-export function addEggBatch(game, count = 18) {
-  for (let i = 0; i < count; i += 1) game.eggs.push(makeEgg());
+export function addEggBatch(game, count = 18, x, y, spread = 26) {
+  for (let i = 0; i < count; i += 1) {
+    const eggX = typeof x === "number" ? x + rand(-spread, spread) : undefined;
+    const eggY = typeof y === "number" ? y + rand(-spread * 0.35, spread * 0.35) : undefined;
+    game.eggs.push(makeEgg(eggX, eggY));
+  }
   game.colonyStarted = true;
 }
 
