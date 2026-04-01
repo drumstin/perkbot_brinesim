@@ -96,13 +96,13 @@ function maybeReproduce(game, shrimp, adults, dt) {
   shrimp.brood = clamp(shrimp.brood + broodGain, 0, 1.25);
 
   if (shrimp.brood > 1 && game.tank.oxygen > 45 && game.tank.waste < 55) {
-    const clutch = Math.round(rand(3, 7));
+    const clutch = Math.random() < 0.7 ? 1 : 2;
     const bodySize = currentSize(shrimp);
     addEggBatch(game, clutch, shrimp.x - bodySize * 1.4, shrimp.y + rand(-2, 2), bodySize * 1.8);
     shrimp.brood = 0.15;
     shrimp.energy *= 0.7;
-    shrimp.broodCooldown = rand(10, 18);
-    addEvent(game, `Adult #${shrimp.id} released a brood of ${clutch} eggs.`);
+    shrimp.broodCooldown = rand(12, 22);
+    addEvent(game, `Adult #${shrimp.id} released ${clutch} egg${clutch === 1 ? "" : "s"}.`);
   }
 }
 
