@@ -184,7 +184,14 @@ function drawShrimp(game, ctx) {
     ctx.translate(s.x, s.y);
     ctx.rotate(heading + wiggle * 0.06);
 
-    if (s.stage === "nauplius") {
+    const larvalProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 6) / 22));
+    const adultProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 22) / 58));
+    const bodyAlpha = s.stage === "elder" ? 0.68 : 0.82;
+    const shellAlpha = s.stage === "elder" ? 0.2 : 0.3;
+    const tailWave = wiggle * size * 0.55;
+    const abdomenSegments = Math.round(3 + adultProgress * 5);
+
+    if (adultProgress < 0.08) {
       const glow = 0.16 + energyFactor * 0.12;
       ctx.fillStyle = `hsla(${s.hue + 16} 88% ${60 + energyFactor * 18}% / 0.82)`;
       ctx.beginPath();
@@ -196,13 +203,13 @@ function drawShrimp(game, ctx) {
       ctx.ellipse(size * 0.15, -0.12, size * 0.5, size * 0.28, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.strokeStyle = "rgba(255, 230, 200, 0.7)";
+      ctx.strokeStyle = `rgba(255, 230, 200, ${0.4 + larvalProgress * 0.3})`;
       ctx.lineWidth = 0.8;
       ctx.beginPath();
       ctx.moveTo(size * 0.2, -0.2);
-      ctx.quadraticCurveTo(size * 1.2, -1.4, size * 2.0, -1.6 + wiggle * 0.5);
+      ctx.quadraticCurveTo(size * 1.2, -1.4, size * (2.0 + larvalProgress * 0.8), -1.6 + wiggle * 0.5);
       ctx.moveTo(size * 0.2, 0.2);
-      ctx.quadraticCurveTo(size * 1.2, 1.4, size * 2.0, 1.6 - wiggle * 0.5);
+      ctx.quadraticCurveTo(size * 1.2, 1.4, size * (2.0 + larvalProgress * 0.8), 1.6 - wiggle * 0.5);
       ctx.stroke();
 
       ctx.fillStyle = "rgba(18, 30, 38, 0.85)";
@@ -212,12 +219,6 @@ function drawShrimp(game, ctx) {
       ctx.restore();
       continue;
     }
-
-    const bodyAlpha = s.stage === "elder" ? 0.68 : 0.82;
-    const shellAlpha = s.stage === "elder" ? 0.2 : 0.3;
-    const tailWave = wiggle * size * 0.55;
-    const abdomenSegments = s.stage === "juvenile" ? 5 : 8;
-
     ctx.strokeStyle = "rgba(255, 226, 190, 0.74)";
     ctx.lineWidth = Math.max(0.8, size * 0.18);
     ctx.beginPath();
@@ -266,8 +267,8 @@ function drawShrimp(game, ctx) {
       ctx.stroke();
     }
 
-    const legCount = s.stage === "juvenile" ? 4 : 6;
-    ctx.strokeStyle = "rgba(255, 238, 210, 0.36)";
+    const legCount = Math.max(2, Math.round(2 + adultProgress * 4));
+    ctx.strokeStyle = `rgba(255, 238, 210, ${0.16 + adultProgress * 0.2})`;
     ctx.lineWidth = 0.9;
     for (let i = 0; i < legCount; i += 1) {
       const t = i / Math.max(1, legCount - 1);
