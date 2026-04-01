@@ -102,6 +102,7 @@ function maybeReproduce(game, shrimp, adults, dt) {
       shrimp.y = clamp(cy + Math.sin(angle) * radius * 0.75, 24, H - 20);
       shrimp.vx = Math.cos(angle + Math.PI / 2) * 0.7;
       shrimp.vy = Math.sin(angle + Math.PI / 2) * 0.5;
+      shrimp.swirlHeading = Math.atan2(shrimp.vy, shrimp.vx);
     }
     if (shrimp.matingTimer <= 0) {
       const clutch = Math.random() < 0.7 ? 1 : 2;

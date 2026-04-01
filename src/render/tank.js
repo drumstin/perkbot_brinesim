@@ -174,7 +174,7 @@ function drawBubbles(game, ctx) {
 function drawShrimp(game, ctx) {
   for (const s of game.shrimp) {
     const size = currentSize(s);
-    const heading = Math.atan2(s.vy, s.vx);
+    const heading = s.matingTimer > 0 && Number.isFinite(s.swirlHeading) ? s.swirlHeading : Math.atan2(s.vy, s.vx);
     const swimCycle = game.elapsed * 12 + s.x * 0.035 + s.y * 0.025;
     const wiggle = Math.sin(swimCycle);
     const pulse = Math.sin(swimCycle * 0.7);
