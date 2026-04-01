@@ -487,6 +487,9 @@ canvas {
   }
 
   .hud.hud-collapsed {
+    left: auto;
+    right: 6px;
+    width: min(160px, calc(100vw - 12px));
     padding: 6px 8px 8px;
     background: rgba(8, 24, 38, 0.78);
     backdrop-filter: blur(10px);
@@ -527,12 +530,16 @@ canvas {
   }
 
   .tank-wrap {
-    padding: 4px;
-    margin-bottom: 44px;
+    padding: 2px;
+    margin-bottom: 28px;
   }
 
   .overlay {
-    padding: 12px 12px 22px;
+    padding: 10px 10px 16px;
+  }
+
+  canvas {
+    max-height: calc(100dvh - 18px);
   }
 
   .tank-menu-wrap {
