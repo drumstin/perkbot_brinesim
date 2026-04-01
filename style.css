@@ -151,6 +151,13 @@ h2 {
   background: var(--panel-2);
 }
 
+.shop-item-poor {
+  opacity: 0.86;
+}
+
+.shop-buy:disabled {
+  opacity: 0.6;
+}
 .registry textarea {
   width: 100%;
   min-height: 260px;

@@ -169,22 +169,6 @@ export function bindUi(game, elements) {
     saveGame(game);
   });
 
-  elements.shop?.addEventListener("pointerup", (event) => {
-    event.preventDefault();
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-    const button = target.closest("button[data-upgrade]");
-    if (!button) return;
-    const key = button.dataset.upgrade;
-    if (!key) return;
-    const labels = {
-      filter: "Mechanical filter",
-      skimmer: "Surface skimmer",
-      bioMedia: "Bio media"
-    };
-    buyUpgrade(game, key, labels[key] ?? key);
-  });
-
   setHudOpen(elements, !window.matchMedia("(max-width: 640px)").matches);
   elements.hudToggle?.addEventListener("click", () => {
     const open = elements.hudContent ? elements.hudContent.hidden : false;
@@ -331,11 +315,21 @@ export function updateHud(game, elements) {
       const level = game.upgrades[key] ?? 0;
       const nextCost = UPGRADE_COSTS[key]?.[level];
       const maxed = nextCost == null;
-      return `<div class="shop-item">
+      const affordable = typeof nextCost === "number" ? game.points >= nextCost : false;
+      return `<div class="shop-item ${affordable ? "" : "shop-item-poor"}">
         <div><strong>${label}</strong><div class="muted">${desc}</div><div class="muted">Level ${level}/3</div></div>
-        <button data-upgrade="${key}" ${maxed ? "disabled" : ""}>${maxed ? "Maxed" : `Buy (${nextCost})`}</button>
+        <button class="shop-buy" data-upgrade="${key}" data-label="${label}" ${maxed ? "disabled" : ""}>${maxed ? "Maxed" : `Buy (${nextCost})`}</button>
       </div>`;
     }).join("");
+
+    elements.shop.querySelectorAll("button[data-upgrade]").forEach((button) => {
+      button.onclick = () => {
+        const key = button.dataset.upgrade;
+        const label = button.dataset.label;
+        if (!key || !label) return;
+        buyUpgrade(game, key, label);
+      };
+    });
   }
 
   if (elements.quickAddEggs) elements.quickAddEggs.textContent = `🥚 Add Eggs (${COSTS.eggs})`;
