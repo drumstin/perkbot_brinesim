@@ -153,6 +153,7 @@ function updateShrimp(game, dt) {
     const shrimp = game.shrimp[i];
     shrimp.age += dt;
     shrimp.stage = stageForAge(shrimp.age);
+    shrimp.spookTimer = Math.max(0, (shrimp.spookTimer ?? 0) - dt);
     const bodySize = currentSize(shrimp);
 
     let tx = shrimp.x + shrimp.vx * 40;
@@ -211,11 +212,12 @@ function updateShrimp(game, dt) {
       const dx = shrimp.x - other.x;
       const dy = shrimp.y - other.y;
       const d2 = dx * dx + dy * dy;
-      if (d2 > 0 && d2 < 3600) {
+      if (d2 > 0 && d2 < 1600 && shrimp.spookTimer <= 0) {
         const d = Math.sqrt(d2);
-        const scare = (1 - d / 60) * 0.18;
+        const scare = (1 - d / 40) * 0.65;
         shrimp.vx += (dx / d) * scare;
         shrimp.vy += (dy / d) * scare;
+        shrimp.spookTimer = rand(0.4, 0.9);
       }
     }
 
