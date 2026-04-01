@@ -443,8 +443,8 @@ canvas {
 
 @media (max-width: 640px) {
   .app {
-    padding: 8px;
-    gap: 8px;
+    padding: 4px;
+    gap: 4px;
   }
 
   .card {
@@ -453,11 +453,11 @@ canvas {
 
   .hud {
     position: fixed;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
     z-index: 20;
-    padding: 10px;
+    padding: 8px;
     border-radius: 18px 18px 14px 14px;
     background: linear-gradient(180deg, rgba(20, 45, 68, 0.96), rgba(8, 24, 38, 0.98));
     box-shadow: 0 -6px 30px rgba(0, 0, 0, 0.45);
@@ -482,9 +482,9 @@ canvas {
   }
 
   .hud-content {
-    max-height: min(58dvh, 420px);
+    max-height: min(48dvh, 360px);
     overflow: auto;
-    margin-top: 10px;
+    margin-top: 8px;
     padding-right: 2px;
   }
 
@@ -508,23 +508,23 @@ canvas {
   }
 
   .tank-wrap {
-    padding: 8px;
-    margin-bottom: 72px;
+    padding: 4px;
+    margin-bottom: 60px;
   }
 
   .overlay {
-    padding: 16px 16px 28px;
+    padding: 12px 12px 22px;
   }
 
   .tank-menu-wrap {
-    top: 12px;
-    left: 12px;
+    top: 8px;
+    left: 8px;
   }
 
   .tank-status-bar {
-    top: 12px;
-    left: 64px;
-    right: 104px;
+    top: 8px;
+    left: 58px;
+    right: 98px;
     gap: 4px;
   }
 
@@ -534,16 +534,16 @@ canvas {
   }
 
   .observe-toggle {
-    top: 12px;
-    right: 58px;
-    min-height: 36px;
-    padding: 6px 10px;
-    font-size: 0.8rem;
+    top: 8px;
+    right: 52px;
+    min-height: 34px;
+    padding: 5px 9px;
+    font-size: 0.76rem;
   }
 
   .tank-log-wrap {
-    top: 12px;
-    right: 12px;
+    top: 8px;
+    right: 8px;
   }
 
   .event-log {
