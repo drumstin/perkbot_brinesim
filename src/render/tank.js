@@ -192,9 +192,10 @@ function drawShrimp(game, ctx) {
     const abdomenSegments = 7;
 
     const glow = 0.16 + energyFactor * 0.12;
+    const bodyDrift = larvalProgress * 0.16 + adultProgress * 0.14;
     ctx.fillStyle = `hsla(${s.hue + 16 - larvalProgress * 5} ${88 - larvalProgress * 10}% ${60 + energyFactor * 18 - larvalProgress * 4}% / ${0.82 - larvalProgress * 0.06})`;
     ctx.beginPath();
-    ctx.ellipse(0.2 + larvalProgress * size * 0.26, 0, 0.95 + size * (0.58 + larvalProgress * 0.11), 0.72 + size * (0.44 + larvalProgress * 0.08), 0, 0, Math.PI * 2);
+    ctx.ellipse(0.2 + bodyDrift * size, 0, 0.95 + size * (0.58 + larvalProgress * 0.07 + adultProgress * 0.05), 0.72 + size * (0.44 + larvalProgress * 0.06 + adultProgress * 0.04), 0, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = `rgba(255, 248, 236, ${glow})`;
@@ -204,16 +205,18 @@ function drawShrimp(game, ctx) {
 
     ctx.strokeStyle = `rgba(255, 230, 200, ${0.4 + larvalProgress * 0.3})`;
     ctx.lineWidth = 0.8;
+    const antennaReach = larvalProgress * 0.48 + adultProgress * 0.34;
     ctx.beginPath();
-    ctx.moveTo(size * (0.2 + larvalProgress * 0.14), -0.2);
-    ctx.quadraticCurveTo(size * (1.2 + larvalProgress * 0.2), -1.4 - larvalProgress * 0.24, size * (2.0 + larvalProgress * 0.85), -1.6 + wiggle * 0.5);
-    ctx.moveTo(size * (0.2 + larvalProgress * 0.14), 0.2);
-    ctx.quadraticCurveTo(size * (1.2 + larvalProgress * 0.2), 1.4 + larvalProgress * 0.24, size * (2.0 + larvalProgress * 0.85), 1.6 - wiggle * 0.5);
+    ctx.moveTo(size * (0.2 + antennaReach * 0.12), -0.2);
+    ctx.quadraticCurveTo(size * (1.2 + antennaReach * 0.14), -1.4 - antennaReach * 0.14, size * (2.0 + antennaReach * 0.5), -1.6 + wiggle * 0.5);
+    ctx.moveTo(size * (0.2 + antennaReach * 0.12), 0.2);
+    ctx.quadraticCurveTo(size * (1.2 + antennaReach * 0.14), 1.4 + antennaReach * 0.14, size * (2.0 + antennaReach * 0.5), 1.6 - wiggle * 0.5);
     ctx.stroke();
 
+    const eyeShift = larvalProgress * 0.18 + adultProgress * 0.16;
     ctx.fillStyle = "rgba(18, 30, 38, 0.85)";
     ctx.beginPath();
-    ctx.arc(size * (0.52 + larvalProgress * 0.45), -0.2, Math.max(0.28, size * 0.12), 0, Math.PI * 2);
+    ctx.arc(size * (0.52 + eyeShift), -0.2, Math.max(0.28, size * 0.12), 0, Math.PI * 2);
     ctx.fill();
 
     if (larvalProgress < 0.34) {
@@ -276,7 +279,8 @@ function drawShrimp(game, ctx) {
       const t = i / Math.max(1, legCount - 1);
       const appendageMaturity = Math.max(0, Math.min(1, larvalProgress * 1.05 - t * 0.22 + adultProgress * 0.35));
       const anchorX = size * 0.8 - t * size * 3.2;
-      const flap = Math.sin(swimCycle * 1.6 + i * 0.9) * size * 0.9;
+      const flapAmplitude = 0.35 + larvalProgress * 0.25 + adultProgress * 0.4;
+      const flap = Math.sin(swimCycle * 1.6 + i * 0.9) * size * flapAmplitude;
       ctx.strokeStyle = `rgba(255, 238, 210, ${0.04 + appendageMaturity * 0.22})`;
       ctx.lineWidth = 0.4 + appendageMaturity * 0.5;
       ctx.beginPath();
