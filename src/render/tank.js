@@ -367,24 +367,24 @@ function drawCorpses(game, ctx) {
   }
 }
 
-function drawObservationOverlay(ctx) {
-  const vignette = ctx.createRadialGradient(W * 0.5, H * 0.5, H * 0.14, W * 0.5, H * 0.5, H * 0.7);
+function drawObservationOverlay(ctx, canvas) {
+  const vignette = ctx.createRadialGradient(canvas.width * 0.5, canvas.height * 0.5, canvas.height * 0.14, canvas.width * 0.5, canvas.height * 0.5, canvas.height * 0.7);
   vignette.addColorStop(0, "rgba(0, 0, 0, 0)");
   vignette.addColorStop(1, "rgba(0, 0, 0, 0.34)");
   ctx.fillStyle = vignette;
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.strokeStyle = "rgba(220, 245, 255, 0.35)";
   ctx.lineWidth = 2;
-  ctx.strokeRect(W * 0.18, H * 0.16, W * 0.64, H * 0.68);
+  ctx.strokeRect(canvas.width * 0.18, canvas.height * 0.16, canvas.width * 0.64, canvas.height * 0.68);
 
   ctx.strokeStyle = "rgba(220, 245, 255, 0.18)";
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(W * 0.5, H * 0.22);
-  ctx.lineTo(W * 0.5, H * 0.78);
-  ctx.moveTo(W * 0.24, H * 0.5);
-  ctx.lineTo(W * 0.76, H * 0.5);
+  ctx.moveTo(canvas.width * 0.5, canvas.height * 0.22);
+  ctx.lineTo(canvas.width * 0.5, canvas.height * 0.78);
+  ctx.moveTo(canvas.width * 0.24, canvas.height * 0.5);
+  ctx.lineTo(canvas.width * 0.76, canvas.height * 0.5);
   ctx.stroke();
 
   ctx.fillStyle = "rgba(220, 245, 255, 0.75)";
@@ -394,9 +394,15 @@ function drawObservationOverlay(ctx) {
 
 export function renderGame(game, elements) {
   const { ctx, canvas } = elements;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const sx = canvas.width / W;
+  const sy = canvas.height / H;
   ctx.save();
+  ctx.scale(sx, sy);
   if (game.observeMode) {
-    ctx.translate(canvas.width * 0.12, canvas.height * 0.09);
+    ctx.translate(W * 0.12, H * 0.09);
     ctx.scale(1.32, 1.32);
   }
   drawTankBackground(game, ctx);
@@ -409,6 +415,6 @@ export function renderGame(game, elements) {
   ctx.restore();
 
   if (game.observeMode) {
-    drawObservationOverlay(ctx);
+    drawObservationOverlay(ctx, canvas);
   }
 }

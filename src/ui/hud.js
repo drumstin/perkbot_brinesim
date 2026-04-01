@@ -1,5 +1,5 @@
 import { addEggBatch, addFoodBurst, currentSize } from "../sim/spawning.js";
-import { restartGame } from "../state.js";
+import { restartGame, W, H } from "../state.js";
 import { saveGame } from "./save.js";
 import { addEvent } from "./log.js";
 
@@ -230,8 +230,8 @@ export function bindUi(game, elements) {
 
   elements.canvas.addEventListener("click", (e) => {
     const rect = elements.canvas.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * elements.canvas.width;
-    const y = ((e.clientY - rect.top) / rect.height) * elements.canvas.height;
+    const x = ((e.clientX - rect.left) / rect.width) * W;
+    const y = ((e.clientY - rect.top) / rect.height) * H;
     addFoodBurst(game, x, y, 4, 1);
     game.tank.foodLevel = Math.min(100, game.tank.foodLevel + 6);
     addEvent(game, "Targeted feed dispersed in tank.");
