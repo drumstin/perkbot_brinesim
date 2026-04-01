@@ -192,9 +192,9 @@ function drawShrimp(game, ctx) {
     const abdomenSegments = 7;
 
     const glow = 0.16 + energyFactor * 0.12;
-    ctx.fillStyle = `hsla(${s.hue + 16 - larvalProgress * 8} ${88 - larvalProgress * 14}% ${60 + energyFactor * 18 - larvalProgress * 6}% / ${0.82 - larvalProgress * 0.08})`;
+    ctx.fillStyle = `hsla(${s.hue + 16 - larvalProgress * 5} ${88 - larvalProgress * 10}% ${60 + energyFactor * 18 - larvalProgress * 4}% / ${0.82 - larvalProgress * 0.06})`;
     ctx.beginPath();
-    ctx.ellipse(0.2 + larvalProgress * size * 0.4, 0, 0.95 + size * (0.58 + larvalProgress * 0.18), 0.72 + size * (0.44 + larvalProgress * 0.12), 0, 0, Math.PI * 2);
+    ctx.ellipse(0.2 + larvalProgress * size * 0.26, 0, 0.95 + size * (0.58 + larvalProgress * 0.11), 0.72 + size * (0.44 + larvalProgress * 0.08), 0, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = `rgba(255, 248, 236, ${glow})`;
@@ -205,10 +205,10 @@ function drawShrimp(game, ctx) {
     ctx.strokeStyle = `rgba(255, 230, 200, ${0.4 + larvalProgress * 0.3})`;
     ctx.lineWidth = 0.8;
     ctx.beginPath();
-    ctx.moveTo(size * (0.2 + larvalProgress * 0.2), -0.2);
-    ctx.quadraticCurveTo(size * (1.2 + larvalProgress * 0.3), -1.4 - larvalProgress * 0.4, size * (2.0 + larvalProgress * 1.4), -1.6 + wiggle * 0.5);
-    ctx.moveTo(size * (0.2 + larvalProgress * 0.2), 0.2);
-    ctx.quadraticCurveTo(size * (1.2 + larvalProgress * 0.3), 1.4 + larvalProgress * 0.4, size * (2.0 + larvalProgress * 1.4), 1.6 - wiggle * 0.5);
+    ctx.moveTo(size * (0.2 + larvalProgress * 0.14), -0.2);
+    ctx.quadraticCurveTo(size * (1.2 + larvalProgress * 0.2), -1.4 - larvalProgress * 0.24, size * (2.0 + larvalProgress * 0.85), -1.6 + wiggle * 0.5);
+    ctx.moveTo(size * (0.2 + larvalProgress * 0.14), 0.2);
+    ctx.quadraticCurveTo(size * (1.2 + larvalProgress * 0.2), 1.4 + larvalProgress * 0.24, size * (2.0 + larvalProgress * 0.85), 1.6 - wiggle * 0.5);
     ctx.stroke();
 
     ctx.fillStyle = "rgba(18, 30, 38, 0.85)";
@@ -229,14 +229,15 @@ function drawShrimp(game, ctx) {
     ctx.quadraticCurveTo(size * 2.5, 2.2 + pulse * 0.8, size * 3.8, 4.4 + pulse * 1.2);
     ctx.stroke();
 
-    ctx.fillStyle = `hsla(${s.hue + 6} 78% ${bodyLight + 6}% / 0.88)`;
+    const matureTint = larvalProgress * 0.45 + adultProgress * 0.55;
+    ctx.fillStyle = `hsla(${s.hue + 6 - matureTint * 2} ${78 - matureTint * 6}% ${bodyLight + 6 - matureTint * 4}% / 0.88)`;
     ctx.beginPath();
-    ctx.ellipse(size * 1.7, 0, size * 1.5, size * 1.02, 0, 0, Math.PI * 2);
+    ctx.ellipse(size * 1.7, 0, size * 1.38, size * 0.96, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = `rgba(255, 247, 236, ${shellAlpha})`;
+    ctx.fillStyle = `rgba(255, 247, 236, ${shellAlpha * (0.55 + matureTint * 0.45)})`;
     ctx.beginPath();
-    ctx.ellipse(size * 1.2, -0.1, size * 2.1, size * 1.04, 0, 0, Math.PI * 2);
+    ctx.ellipse(size * 1.2, -0.1, size * (1.7 + matureTint * 0.4), size * (0.92 + matureTint * 0.12), 0, 0, Math.PI * 2);
     ctx.fill();
 
     if (s.stage === "adult" && s.brood > 0.55) {
@@ -298,28 +299,29 @@ function drawShrimp(game, ctx) {
       }
     }
 
-    ctx.strokeStyle = "rgba(255, 226, 190, 0.68)";
-    ctx.lineWidth = 0.95;
+    const tailMaturity = Math.max(0, Math.min(1, larvalProgress * 0.55 + adultProgress * 0.9));
+    ctx.strokeStyle = `rgba(255, 226, 190, ${0.16 + tailMaturity * 0.52})`;
+    ctx.lineWidth = 0.5 + tailMaturity * 0.45;
     ctx.beginPath();
-    ctx.moveTo(-size * 4.4, tailWave * 0.75);
-    ctx.quadraticCurveTo(-size * 5.2, -size * 0.55 + tailWave * 0.8, -size * 5.9, -size * 1.3 + tailWave * 0.95);
-    ctx.quadraticCurveTo(-size * 6.4, -size * 1.9 + tailWave, -size * 6.9, -size * 2.4 + tailWave * 1.05);
-    ctx.moveTo(-size * 4.4, tailWave * 0.75);
-    ctx.quadraticCurveTo(-size * 5.2, size * 0.55 + tailWave * 0.8, -size * 5.9, size * 1.3 + tailWave * 0.95);
-    ctx.quadraticCurveTo(-size * 6.4, size * 1.9 + tailWave, -size * 6.9, size * 2.4 + tailWave * 1.05);
+    ctx.moveTo(-size * 4.1, tailWave * 0.55);
+    ctx.quadraticCurveTo(-size * (4.7 + tailMaturity * 0.5), -size * (0.18 + tailMaturity * 0.37) + tailWave * 0.65, -size * (5.0 + tailMaturity * 0.9), -size * (0.35 + tailMaturity * 0.95) + tailWave * 0.8);
+    ctx.quadraticCurveTo(-size * (5.1 + tailMaturity * 1.0), -size * (0.45 + tailMaturity * 1.45) + tailWave * 0.9, -size * (5.2 + tailMaturity * 1.25), -size * (0.55 + tailMaturity * 1.8) + tailWave);
+    ctx.moveTo(-size * 4.1, tailWave * 0.55);
+    ctx.quadraticCurveTo(-size * (4.7 + tailMaturity * 0.5), size * (0.18 + tailMaturity * 0.37) + tailWave * 0.65, -size * (5.0 + tailMaturity * 0.9), size * (0.35 + tailMaturity * 0.95) + tailWave * 0.8);
+    ctx.quadraticCurveTo(-size * (5.1 + tailMaturity * 1.0), size * (0.45 + tailMaturity * 1.45) + tailWave * 0.9, -size * (5.2 + tailMaturity * 1.25), size * (0.55 + tailMaturity * 1.8) + tailWave);
     ctx.stroke();
 
-    ctx.fillStyle = "rgba(255, 236, 208, 0.16)";
+    ctx.fillStyle = `rgba(255, 236, 208, ${0.04 + tailMaturity * 0.12})`;
     ctx.beginPath();
-    ctx.moveTo(-size * 4.4, tailWave * 0.72);
-    ctx.quadraticCurveTo(-size * 5.7, -size * 0.4 + tailWave * 0.9, -size * 6.3, -size * 1.55 + tailWave);
-    ctx.quadraticCurveTo(-size * 5.8, -size * 1.05 + tailWave * 0.8, -size * 4.9, tailWave * 0.58);
+    ctx.moveTo(-size * 4.15, tailWave * 0.54);
+    ctx.quadraticCurveTo(-size * (4.9 + tailMaturity * 0.55), -size * (0.12 + tailMaturity * 0.28) + tailWave * 0.72, -size * (5.1 + tailMaturity * 0.78), -size * (0.22 + tailMaturity * 1.08) + tailWave * 0.86);
+    ctx.quadraticCurveTo(-size * (4.8 + tailMaturity * 0.6), -size * (0.3 + tailMaturity * 0.7) + tailWave * 0.72, -size * 4.55, tailWave * 0.5);
     ctx.closePath();
     ctx.fill();
     ctx.beginPath();
-    ctx.moveTo(-size * 4.4, tailWave * 0.72);
-    ctx.quadraticCurveTo(-size * 5.7, size * 0.4 + tailWave * 0.9, -size * 6.3, size * 1.55 + tailWave);
-    ctx.quadraticCurveTo(-size * 5.8, size * 1.05 + tailWave * 0.8, -size * 4.9, tailWave * 0.58);
+    ctx.moveTo(-size * 4.15, tailWave * 0.54);
+    ctx.quadraticCurveTo(-size * (4.9 + tailMaturity * 0.55), size * (0.12 + tailMaturity * 0.28) + tailWave * 0.72, -size * (5.1 + tailMaturity * 0.78), size * (0.22 + tailMaturity * 1.08) + tailWave * 0.86);
+    ctx.quadraticCurveTo(-size * (4.8 + tailMaturity * 0.6), size * (0.3 + tailMaturity * 0.7) + tailWave * 0.72, -size * 4.55, tailWave * 0.5);
     ctx.closePath();
     ctx.fill();
 
