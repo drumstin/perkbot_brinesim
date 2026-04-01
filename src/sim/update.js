@@ -1,6 +1,7 @@
 import { H, W } from "../state.js";
 import { addEvent } from "../ui/log.js";
 import { saveGame } from "../ui/save.js";
+import { COSTS } from "../ui/hud.js";
 import { addEggBatch, currentSize, makeBubble, makeCorpse, makeShrimp, rand, stageForAge } from "./spawning.js";
 
 function clamp01(value) {
@@ -56,10 +57,12 @@ function updateEggs(game, dt) {
       const hatchChance = game.tank.stability * 0.7 + game.tank.oxygen / 200 - game.tank.waste / 180;
       if (Math.random() < hatchChance) {
         game.shrimp.push(makeShrimp(game, egg.x + rand(-3, 3), egg.y + rand(-3, 3)));
-        addEvent(game, `Egg hatched near (${Math.round(egg.x)}, ${Math.round(egg.y)}).`);
+        game.points += 2;
+        addEvent(game, `Egg hatched near (${Math.round(egg.x)}, ${Math.round(egg.y)}). +2 points`);
         if (!game.milestones.firstHatch) {
           game.milestones.firstHatch = true;
-          addEvent(game, "First nauplii hatched.");
+          game.points += 5;
+          addEvent(game, "First nauplii hatched. +5 milestone points");
         }
       } else {
         game.tank.waste = clamp(game.tank.waste + 0.8, 0, 100);
@@ -282,19 +285,23 @@ function updateMilestones(game) {
 
   if (!game.milestones.tenAdults && adults >= 10) {
     game.milestones.tenAdults = true;
-    addEvent(game, "Milestone reached: 10 adults.");
+    game.points += 8;
+    addEvent(game, "Milestone reached: 10 adults. +8 points");
   }
   if (!game.milestones.fiftyTotal && totalLive >= 50) {
     game.milestones.fiftyTotal = true;
-    addEvent(game, "Milestone reached: 50 live organisms in tank.");
+    game.points += 10;
+    addEvent(game, "Milestone reached: 50 live organisms in tank. +10 points");
   }
   if (!game.milestones.stableTank && game.elapsed > 60 && game.tank.stability > 0.78 && game.tank.oxygen > 65 && game.tank.waste < 25) {
     game.milestones.stableTank = true;
-    addEvent(game, "Milestone reached: Stable tank.");
+    game.points += 12;
+    addEvent(game, "Milestone reached: Stable tank. +12 points");
   }
   if (!game.milestones.breeder && game.log.some((entry) => entry.text.includes("released a brood"))) {
     game.milestones.breeder = true;
-    addEvent(game, "Milestone reached: Breeder.");
+    game.points += 9;
+    addEvent(game, "Milestone reached: Breeder. +9 points");
   }
 }
 

@@ -3,7 +3,7 @@ import { restartGame } from "../state.js";
 import { saveGame } from "./save.js";
 import { addEvent } from "./log.js";
 
-const COSTS = {
+export const COSTS = {
   eggs: 12,
   lightFeed: 4,
   heavyFeed: 8,
@@ -241,6 +241,13 @@ export function updateHud(game, elements) {
     elements.observeToggle.classList.toggle("active", game.observeMode);
   }
 
+  if (elements.addEggs) elements.addEggs.textContent = `Add Eggs (${COSTS.eggs})`;
+  if (elements.feedLight) elements.feedLight.textContent = `Light Feed (${COSTS.lightFeed})`;
+  if (elements.feedHeavy) elements.feedHeavy.textContent = `Heavy Feed (${COSTS.heavyFeed})`;
+  if (elements.waterChange) elements.waterChange.textContent = game.tank.waterChangeCooldown > 0
+    ? `Water Change (${Math.ceil(game.tank.waterChangeCooldown)}s)`
+    : `Water Change (${COSTS.waterChange})`;
+
   if (elements.tankStatusBar) {
     elements.tankStatusBar.innerHTML = `
       <div class="status-chip">⭐ ${Math.round(game.points)}</div>
@@ -272,10 +279,13 @@ export function updateHud(game, elements) {
     ["Breeder", game.milestones.breeder]
   ].map(([label, done]) => `<div class="milestone-item ${done ? "good" : "muted"}">${done ? "✓" : "○"} ${label}</div>`).join("");
 
+  if (elements.quickAddEggs) elements.quickAddEggs.textContent = `🥚 Add Eggs (${COSTS.eggs})`;
+  if (elements.quickFeedLight) elements.quickFeedLight.textContent = `🌿 Light Feed (${COSTS.lightFeed})`;
+  if (elements.quickFeedHeavy) elements.quickFeedHeavy.textContent = `🍽️ Heavy Feed (${COSTS.heavyFeed})`;
   if (elements.quickPause) elements.quickPause.textContent = game.paused ? "▶️ Resume" : "⏸️ Pause";
   if (elements.quickSpeed) elements.quickSpeed.textContent = game.timeScale === 1 ? "⏩ Speed x1" : game.timeScale === 2 ? "⏩ Speed x2" : "⏩ Speed x4";
   if (elements.quickWaterChange) {
-    elements.quickWaterChange.textContent = game.tank.waterChangeCooldown > 0 ? `💧 Cooldown ${Math.ceil(game.tank.waterChangeCooldown)}s` : "💧 Water Change";
+    elements.quickWaterChange.textContent = game.tank.waterChangeCooldown > 0 ? `💧 Cooldown ${Math.ceil(game.tank.waterChangeCooldown)}s` : `💧 Water Change (${COSTS.waterChange})`;
     elements.quickWaterChange.disabled = game.tank.waterChangeCooldown > 0;
   }
 
