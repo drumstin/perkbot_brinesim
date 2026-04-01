@@ -11,7 +11,7 @@ function resizeTankCanvas() {
   const rect = canvas.getBoundingClientRect();
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   const width = Math.max(320, Math.round(rect.width * dpr));
-  const height = Math.round((width / 16) * 10);
+  const height = Math.max(220, Math.round(rect.height * dpr));
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;
     canvas.height = height;

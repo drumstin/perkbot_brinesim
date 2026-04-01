@@ -522,6 +522,8 @@ canvas {
     padding: 0;
     margin-bottom: 20px;
     min-height: calc(100dvh - 70px);
+    display: flex;
+    align-items: stretch;
   }
 
   .overlay {
@@ -530,7 +532,9 @@ canvas {
 
   canvas {
     height: calc(100dvh - 82px);
+    aspect-ratio: auto;
     max-height: none;
+    object-fit: fill;
   }
 
   .tank-menu-wrap {
