@@ -29,6 +29,9 @@ export function createGame(elements) {
     log: [],
     statsHistory: [],
     observeMode: save?.observeMode ?? false,
+    points: save?.points ?? 30,
+    pointTimer: 0,
+    lastPointAwardTime: save?.lastPointAwardTime ?? 0,
     tank: {
       salinity: save?.tank?.salinity ?? 55,
       temperature: save?.tank?.temperature ?? 52,
@@ -86,6 +89,9 @@ export function restartGame(game) {
   game.log = [];
   game.statsHistory = [];
   game.observeMode = false;
+  game.points = 30;
+  game.pointTimer = 0;
+  game.lastPointAwardTime = 0;
   game.historyTimer = 0;
   game.milestones = {
     firstHatch: false,

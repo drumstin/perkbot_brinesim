@@ -261,6 +261,21 @@ function recordHistory(game) {
   if (game.statsHistory.length > 90) game.statsHistory.shift();
 }
 
+function updatePoints(game, dt) {
+  game.pointTimer = (game.pointTimer ?? 0) + dt;
+  if (game.pointTimer < 8) return;
+
+  const adults = game.shrimp.filter((s) => s.stage === "adult").length;
+  const stableBonus = game.tank.stability > 0.72 && game.tank.oxygen > 60 && game.tank.waste < 35 ? 1 : 0;
+  const colonyBonus = adults >= 3 ? 1 : 0;
+  const gain = 1 + stableBonus + colonyBonus;
+
+  game.pointTimer = 0;
+  game.points += gain;
+  game.lastPointAwardTime = game.elapsed;
+  addEvent(game, `Earned ${gain} points from colony upkeep.`);
+}
+
 function updateMilestones(game) {
   const adults = game.shrimp.filter((s) => s.stage === "adult").length;
   const totalLive = game.shrimp.length + game.eggs.length;
@@ -316,6 +331,7 @@ export function updateGame(game, dt) {
   updateBubbles(game);
   maybeAmbientEvents(game);
   recordHistory(game);
+  updatePoints(game, dt);
   updateMilestones(game);
 
   game.collapsed = game.colonyStarted && game.shrimp.length === 0 && game.eggs.length === 0;

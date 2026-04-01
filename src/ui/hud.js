@@ -3,8 +3,24 @@ import { restartGame } from "../state.js";
 import { saveGame } from "./save.js";
 import { addEvent } from "./log.js";
 
+const COSTS = {
+  eggs: 12,
+  lightFeed: 4,
+  heavyFeed: 8,
+  waterChange: 6
+};
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function spendPoints(game, amount, reason) {
+  if (game.points < amount) {
+    addEvent(game, `Not enough points for ${reason}.`);
+    return false;
+  }
+  game.points -= amount;
+  return true;
 }
 
 function setPauseState(game, elements, paused) {
@@ -43,6 +59,10 @@ function performWaterChange(game) {
     addEvent(game, `Water change unavailable for ${Math.ceil(game.tank.waterChangeCooldown)}s.`);
     return;
   }
+  if (!spendPoints(game, COSTS.waterChange, "a water change")) {
+    saveGame(game);
+    return;
+  }
 
   game.tank.waste = clamp(game.tank.waste - 22, 0, 100);
   game.tank.oxygen = clamp(game.tank.oxygen + 10, 0, 100);
@@ -71,12 +91,20 @@ export function bindUi(game, elements) {
   });
 
   const handleAddEggs = () => {
+    if (!spendPoints(game, COSTS.eggs, "eggs")) {
+      saveGame(game);
+      return;
+    }
     addEggBatch(game, 16);
     addEvent(game, "Added a batch of eggs.");
     saveGame(game);
   };
 
   const handleFeedLight = () => {
+    if (!spendPoints(game, COSTS.lightFeed, "light feed")) {
+      saveGame(game);
+      return;
+    }
     addFoodBurst(game, undefined, undefined, 5, 0.9);
     game.tank.foodLevel = Math.min(100, game.tank.foodLevel + 10);
     addEvent(game, "Light feeding added.");
@@ -84,6 +112,10 @@ export function bindUi(game, elements) {
   };
 
   const handleFeedHeavy = () => {
+    if (!spendPoints(game, COSTS.heavyFeed, "heavy feed")) {
+      saveGame(game);
+      return;
+    }
     addFoodBurst(game, undefined, undefined, 10, 1.25);
     game.tank.foodLevel = Math.min(100, game.tank.foodLevel + 22);
     game.tank.waste = Math.min(100, game.tank.waste + 4);
@@ -196,7 +228,8 @@ export function updateHud(game, elements) {
     <div class="summary-item">Colony status: <strong>${game.collapsed ? "Collapsed" : game.colonyStarted ? "Active" : "Waiting"}</strong></div>
     <div class="summary-item">Tank stability: <strong>${Math.round(game.tank.stability * 100)}%</strong></div>
     <div class="summary-item">Time: <strong>${game.elapsed.toFixed(1)}s</strong></div>
-    <div class="summary-item">Water change: <strong>${game.tank.waterChangeCooldown > 0 ? `${Math.ceil(game.tank.waterChangeCooldown)}s cooldown` : "Ready"}</strong></div>
+    <div class="summary-item">Points: <strong>${Math.round(game.points)}</strong></div>
+    <div class="summary-item">Water change: <strong>${game.tank.waterChangeCooldown > 0 ? `${Math.ceil(game.tank.waterChangeCooldown)}s cooldown` : `${COSTS.waterChange} pts`}</strong></div>
   `;
 
   const warnings = buildWarnings(game);
@@ -210,6 +243,7 @@ export function updateHud(game, elements) {
 
   if (elements.tankStatusBar) {
     elements.tankStatusBar.innerHTML = `
+      <div class="status-chip">⭐ ${Math.round(game.points)}</div>
       <div class="status-chip">🦐 ${game.shrimp.length}</div>
       <div class="status-chip">🥚 ${game.eggs.length}</div>
       <div class="status-chip">O₂ ${Math.round(game.tank.oxygen)}%</div>
