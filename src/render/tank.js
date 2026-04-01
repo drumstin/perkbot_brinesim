@@ -184,38 +184,39 @@ function drawShrimp(game, ctx) {
     ctx.translate(s.x, s.y);
     ctx.rotate(heading + wiggle * 0.06);
 
-    const larvalProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 6) / 22));
+    const larvalProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 4) / 30));
     const adultProgress = Math.max(0, Math.min(1, ((s.age ?? 0) - 22) / 58));
     const bodyAlpha = s.stage === "elder" ? 0.68 : 0.82;
     const shellAlpha = s.stage === "elder" ? 0.2 : 0.3;
     const tailWave = wiggle * size * 0.55;
-    const abdomenSegments = Math.round(3 + adultProgress * 5);
+    const abdomenSegments = Math.round(2 + larvalProgress * 2 + adultProgress * 4);
 
-    if (adultProgress < 0.08) {
-      const glow = 0.16 + energyFactor * 0.12;
-      ctx.fillStyle = `hsla(${s.hue + 16} 88% ${60 + energyFactor * 18}% / 0.82)`;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 0.95 + size * 0.58, 0.72 + size * 0.44, 0, 0, Math.PI * 2);
-      ctx.fill();
+    const glow = 0.16 + energyFactor * 0.12;
+    ctx.fillStyle = `hsla(${s.hue + 16 - larvalProgress * 8} ${88 - larvalProgress * 14}% ${60 + energyFactor * 18 - larvalProgress * 6}% / ${0.82 - larvalProgress * 0.08})`;
+    ctx.beginPath();
+    ctx.ellipse(0.2 + larvalProgress * size * 0.4, 0, 0.95 + size * (0.58 + larvalProgress * 0.18), 0.72 + size * (0.44 + larvalProgress * 0.12), 0, 0, Math.PI * 2);
+    ctx.fill();
 
-      ctx.fillStyle = `rgba(255, 248, 236, ${glow})`;
-      ctx.beginPath();
-      ctx.ellipse(size * 0.15, -0.12, size * 0.5, size * 0.28, 0, 0, Math.PI * 2);
-      ctx.fill();
+    ctx.fillStyle = `rgba(255, 248, 236, ${glow})`;
+    ctx.beginPath();
+    ctx.ellipse(size * (0.15 + larvalProgress * 0.3), -0.12, size * (0.5 + larvalProgress * 0.25), size * (0.28 + larvalProgress * 0.18), 0, 0, Math.PI * 2);
+    ctx.fill();
 
-      ctx.strokeStyle = `rgba(255, 230, 200, ${0.4 + larvalProgress * 0.3})`;
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(size * 0.2, -0.2);
-      ctx.quadraticCurveTo(size * 1.2, -1.4, size * (2.0 + larvalProgress * 0.8), -1.6 + wiggle * 0.5);
-      ctx.moveTo(size * 0.2, 0.2);
-      ctx.quadraticCurveTo(size * 1.2, 1.4, size * (2.0 + larvalProgress * 0.8), 1.6 - wiggle * 0.5);
-      ctx.stroke();
+    ctx.strokeStyle = `rgba(255, 230, 200, ${0.4 + larvalProgress * 0.3})`;
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(size * (0.2 + larvalProgress * 0.2), -0.2);
+    ctx.quadraticCurveTo(size * (1.2 + larvalProgress * 0.3), -1.4 - larvalProgress * 0.4, size * (2.0 + larvalProgress * 1.4), -1.6 + wiggle * 0.5);
+    ctx.moveTo(size * (0.2 + larvalProgress * 0.2), 0.2);
+    ctx.quadraticCurveTo(size * (1.2 + larvalProgress * 0.3), 1.4 + larvalProgress * 0.4, size * (2.0 + larvalProgress * 1.4), 1.6 - wiggle * 0.5);
+    ctx.stroke();
 
-      ctx.fillStyle = "rgba(18, 30, 38, 0.85)";
-      ctx.beginPath();
-      ctx.arc(size * 0.52, -0.2, Math.max(0.28, size * 0.12), 0, Math.PI * 2);
-      ctx.fill();
+    ctx.fillStyle = "rgba(18, 30, 38, 0.85)";
+    ctx.beginPath();
+    ctx.arc(size * (0.52 + larvalProgress * 0.45), -0.2, Math.max(0.28, size * 0.12), 0, Math.PI * 2);
+    ctx.fill();
+
+    if (larvalProgress < 0.22) {
       ctx.restore();
       continue;
     }
