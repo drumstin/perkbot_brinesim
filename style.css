@@ -521,9 +521,10 @@ canvas {
   .tank-wrap {
     padding: 0;
     margin-bottom: 20px;
-    min-height: calc(100dvh - 70px);
+    min-height: 0;
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    justify-content: center;
   }
 
   .overlay {
@@ -531,10 +532,11 @@ canvas {
   }
 
   canvas {
-    height: calc(100dvh - 82px);
-    aspect-ratio: auto;
-    max-height: none;
-    object-fit: fill;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    max-height: calc(100dvh - 82px);
+    object-fit: contain;
   }
 
   .tank-menu-wrap {
